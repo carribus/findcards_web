@@ -1,21 +1,31 @@
+body {
+  background-color: #363b44;
+}
+
 .App {
   text-align: center;
+
 }
 
 .App-logo {
-  height: 40vmin;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 48px;
+  color: white;
+  padding-left: 10px;
+  padding-right: 10px;
   pointer-events: none;
+  border-radius: 5px;
+  border-color: black;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
+  /* .App-logo {
     animation: App-logo-spin infinite 20s linear;
-  }
+  } */
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  min-height: 95vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,8 +34,98 @@
   color: white;
 }
 
+.App-footer {
+  min-height: 2vh;
+  font-size: 14px;
+  color: #6c7588;
+  border-top: 2px black solid;
+  padding-top: 10px;
+}
+
 .App-link {
   color: #61dafb;
+}
+
+.SearchArea {
+  width: 90%;
+}
+
+.SearchField {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  width: 50%;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 24px;
+}
+
+.SearchField:focus {
+  outline: none;
+}
+
+.Results {
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.ResultLabel {
+  font-size: 24px;
+}
+
+.ResultItem {
+  /* height: 100px; */
+  text-align: center;
+  width: 200px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 5px 5px 5px 5px;
+  border: rgb(101, 102, 112) solid 2px;
+  border-radius: 10px;
+  clear: both;
+  transition: background-color 0.5s linear;
+}
+
+.ResultItem:hover {
+  background-color: #424e64;
+  transition: background-color 0.5s linear;
+}
+
+.DeckLink {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  /* display: flex;
+  flex-direction: column; */
+}
+
+.DeckName {
+  font-weight: bold;
+  font-size: 12px;
+  vertical-align: middle;
+  padding: 3px;
+  margin: 0px;
+}
+
+.DeckPrice {
+  padding: 0px;
+  padding-top: 10px;
+  margin: 0px;
+}
+
+.SiteUrl {
+  padding: 0px;
+  font-style: italic;
+  font-size: 12px;
+}
+
+.Thumbnail {
+  height: 150px;
+  width: 180px;
+  /* margin-right: 10px;
+  margin-bottom: 10px; */
 }
 
 @keyframes App-logo-spin {
