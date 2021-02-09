@@ -19,8 +19,7 @@ function App() {
       </header>
       <a className="NavLink" href="#root">Back to top</a>
       <footer className="App-footer">
-        find-cards.com | find-decks.com<br/>
-        Copyright {new Date().getFullYear()}, SciEnt<br/>Logo supplied by <a className="FooterLink" href="https://www.vecteezy.com/free-vector/playing-card-icons">Playing Card Icons Vectors by Vecteezy</a>
+        Copyright {new Date().getFullYear()}, SciEnt | Logo supplied by <a className="FooterLink" href="https://www.vecteezy.com/free-vector/playing-card-icons">Playing Card Icons Vectors by Vecteezy</a>
 
       </footer>
     </div>
