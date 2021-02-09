@@ -68,7 +68,14 @@ class ResultsArea extends React.Component {
 
   render() {
     const results = this.props.results;
-    const label = results.length > 0 ? <p className="ResultLabel">Showing {results.length} results for {this.props.searchText}</p> : <p/>
+    let label;
+    if (results) {
+      label = results.length > 0 
+              ? <p className="ResultLabel">Showing {results.length} results for {this.props.searchText}</p> 
+              : <p className="ResultLabel">No results for for {this.props.searchText}</p>
+    } else {
+      label = <p/>
+    }
     const items = this.renderItems(results);
 
     return (
@@ -88,7 +95,7 @@ class SearchArea extends React.Component {
     this.state = {
       searchText: null,
       resultsText: null,
-      results: [],
+      results: null,
     }
   }
 
