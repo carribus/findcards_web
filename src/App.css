@@ -7,6 +7,11 @@ body {
 
 }
 
+.Logo {
+  width: 200px;
+  height: auto;
+}
+
 .App-logo {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-size: 48px;
@@ -25,7 +30,7 @@ body {
 }
 
 .App-header {
-  min-height: 95vh;
+  min-height: 92vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -134,6 +139,10 @@ body {
   margin-top: 10px;
 }
 
+.FooterLink, .FooterLink:visited, .NavFooterLinkLink:active {
+  color: #6c7588;
+  margin-top: 10px;
+}
  
 
 @keyframes App-logo-spin {

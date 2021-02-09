@@ -13,13 +13,15 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+      <img className="Logo" src={logo} alt="logo" />
         <div className="App-logo">find-cards.com</div>
         <SearchArea />
       </header>
       <a className="NavLink" href="#root">Back to top</a>
       <footer className="App-footer">
         find-cards.com | find-decks.com<br/>
-        Copyright {new Date().getFullYear()}, SciEnt
+        Copyright {new Date().getFullYear()}, SciEnt<br/>Logo supplied by <a className="FooterLink" href="https://www.vecteezy.com/free-vector/playing-card-icons">Playing Card Icons Vectors by Vecteezy</a>
+
       </footer>
     </div>
   );
