@@ -77,7 +77,7 @@ class ResultsArea extends React.Component {
     let label;
     if (results) {
       label = results.length > 0 
-              ? <p className="ResultLabel">Showing {results.length} results for {this.props.searchText}</p> 
+              ? <p className="ResultLabel">Showing {results.length} results for &quot;{this.props.searchText}&quot;</p> 
               : <p className="ResultLabel">No results for &quot;{this.props.searchText}&quot;</p>
     } else {
       label = <p/>
