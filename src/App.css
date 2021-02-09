@@ -97,8 +97,6 @@ body {
   color: white;
   text-decoration: none;
   font-size: 16px;
-  /* display: flex;
-  flex-direction: column; */
 }
 
 .DeckName {
@@ -122,10 +120,8 @@ body {
 }
 
 .Thumbnail {
-  height: 150px;
   width: 180px;
-  /* margin-right: 10px;
-  margin-bottom: 10px; */
+  height: auto;
 }
 
 @keyframes App-logo-spin {
