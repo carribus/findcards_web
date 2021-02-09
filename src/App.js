@@ -16,6 +16,7 @@ function App() {
         <div className="App-logo">find-cards.com</div>
         <SearchArea />
       </header>
+      <a href="#root">Back to top</a>
       <footer className="App-footer">
         find-cards.com | find-decks.com<br/>
         Copyright {new Date().getFullYear()}, SciEnt
@@ -50,18 +51,21 @@ class ResultsArea extends React.Component {
   }
 
   renderItems(items) {
-    const results = items.map((item, index) => {
-      return (
-        <div key={item.url} className="ResultItem">
-          <a className="DeckLink" href={item.url} target="_blank">
-            <img className="Thumbnail" src={item.image_url} />
-            <p className="DeckName">{item.deck_name}</p>
-            <p className="DeckPrice">{item.currency}{item.price}</p>
-            <p className="SiteUrl">{item.site}</p>
-          </a>      
-        </div>
-      )
-    });
+    let results = null;
+    if (items) {
+      results = items.map((item, index) => {
+        return (
+          <div key={item.url} className="ResultItem">
+            <a className="DeckLink" href={item.url} target="_blank">
+              <img className="Thumbnail" src={item.image_url} />
+              <p className="DeckName">{item.deck_name}</p>
+              <p className="DeckPrice">{item.currency}{item.price}</p>
+              <p className="SiteUrl">{item.site}</p>
+            </a>      
+          </div>
+        )
+      });
+    }
 
     return results;
   }
