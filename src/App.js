@@ -16,7 +16,7 @@ function App() {
         <div className="App-logo">find-cards.com</div>
         <SearchArea />
       </header>
-      <a href="#root">Back to top</a>
+      <a className="NavLink" href="#root">Back to top</a>
       <footer className="App-footer">
         find-cards.com | find-decks.com<br/>
         Copyright {new Date().getFullYear()}, SciEnt
@@ -76,7 +76,7 @@ class ResultsArea extends React.Component {
     if (results) {
       label = results.length > 0 
               ? <p className="ResultLabel">Showing {results.length} results for {this.props.searchText}</p> 
-              : <p className="ResultLabel">No results for {this.props.searchText}</p>
+              : <p className="ResultLabel">No results for &quot;{this.props.searchText}&quot;</p>
     } else {
       label = <p/>
     }

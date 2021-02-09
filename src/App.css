@@ -40,6 +40,7 @@ body {
   color: #6c7588;
   border-top: 2px black solid;
   padding-top: 10px;
+  margin-top: 10px;
 }
 
 .App-link {
@@ -126,6 +127,14 @@ body {
   max-height: 100px;
   height: auto;
 }
+
+.NavLink, .NavLink:visited, .NavLink:active {
+  color: white;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+ 
 
 @keyframes App-logo-spin {
   from {
