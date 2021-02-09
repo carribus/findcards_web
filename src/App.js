@@ -3,8 +3,11 @@ import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const HOST = "localhost:8000";
-const API_SEARCH = `http://${HOST}/search?key=`;
+const HOST = "findcards-web-api-ummnz.ondigitalocean.app";
+const API_SEARCH = `https://${HOST}/search?key=`;
+
+// const HOST = "localhost:8000";
+// const API_SEARCH = `http://${HOST}/search?key=`;
 
 function App() {
   return (
