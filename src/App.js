@@ -3,11 +3,11 @@ import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// const HOST = "find-cards/api"; 
-// const API_SEARCH = `https://${HOST}/search?key=`;
+const HOST = "find-cards/api"; 
+const API_SEARCH = `https://${HOST}/search?key=`;
 
-const HOST = "localhost:8000";
-const API_SEARCH = `http://${HOST}/search?key=`;
+// const HOST = "localhost:8000";
+// const API_SEARCH = `http://${HOST}/search?key=`;
 
 function App() {
   return (
