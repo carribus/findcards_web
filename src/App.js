@@ -3,7 +3,7 @@ import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const HOST = "findcards-web-rmmk5.ondigitalocean.app/api"; 
+const HOST = "find-cards.com/api"; 
 const API_SEARCH = `https://${HOST}/search?key=`;
 
 // const HOST = "localhost:8000";
