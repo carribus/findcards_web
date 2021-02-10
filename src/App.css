@@ -71,11 +71,10 @@ body {
 }
 
 .Results {
-  /* text-align: left; */
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .ResultLabel {
@@ -87,6 +86,8 @@ body {
   width: 175px;
   padding-top: 10px;
   padding-bottom: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
   margin: 5px 5px 5px 5px;
   border: rgb(101, 102, 112) solid 2px;
   border-radius: 10px;
@@ -103,6 +104,7 @@ body {
 }
 
 .DeckLink {
+  max-width: 100%;
   color: white;
   text-decoration: none;
   font-size: 16px;
@@ -123,9 +125,10 @@ body {
 }
 
 .SiteUrl {
-  padding: 0px;
+  max-width: 100%;
+  text-overflow: ellipsis;
   font-style: italic;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .Thumbnail {
@@ -165,7 +168,7 @@ body {
 
 @media (min-width: 768px) {
   .ResultItem {
-    width: 160px;
+    width: 180px;
   }
 }
 
