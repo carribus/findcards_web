@@ -129,7 +129,7 @@ body {
 }
 
 .Thumbnail {
-  max-width: 170px;
+  max-width: 95%;
   max-height: 100px;
   height: auto;
 }
@@ -144,13 +144,28 @@ body {
   color: #6c7588;
   margin-top: 10px;
 }
- 
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+@media (min-width: 320px) {
+  .ResultItem {
+    width: 220px;
   }
 }
+
+@media (min-width: 375px) {
+  .ResultItem {
+    width: 150px;
+  }
+}
+
+@media (min-width: 600px) {
+  .ResultItem {
+    width: 150px;
+  }
+}
+
+@media (min-width: 768px) {
+  .ResultItem {
+    width: 160px;
+  }
+}
+
