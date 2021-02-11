@@ -62,13 +62,19 @@ class SearchForm extends React.Component {
   render() {
     return (
       <form onSubmit={(e) => this.props.onSubmit(e)}>
-        <input 
-          className="SearchField" 
-          name="searchfield"
-          onChange={(e) => this.props.onChange(e)}
-          type="text" 
-          placeholder="Enter name of a deck here" 
-        />
+        <div className="FormContainer">
+          <input 
+            className="SearchField" 
+            name="searchfield"
+            onChange={(e) => this.props.onChange(e)}
+            type="text" 
+            placeholder="Enter name of a deck here" 
+          />
+          <button
+            className="SearchButton"
+            onClick={(e) => this.props.onSubmit(e)}
+          >Search</button>
+        </div>
       </form>
     )
   }

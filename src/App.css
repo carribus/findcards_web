@@ -61,6 +61,12 @@ body {
   width: 90%;
 }
 
+.FormContainer {
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
 .SearchField {
   margin-top: 10px;
   margin-bottom: 20px;
@@ -69,6 +75,13 @@ body {
   height: 40px;
   border-radius: 10px;
   font-size: 24px;
+}
+
+.SearchButton {
+  height: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
 }
 
 .SearchField:focus {
