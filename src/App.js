@@ -3,26 +3,49 @@ import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const HOST = "find-cards.com/api"; 
-const API_SEARCH = `https://${HOST}/search?key=`;
+// const HOST = "find-cards.com/api"; 
+const HOST = "localhost:8000";
 
-// const HOST = "localhost:8000";
-// const API_SEARCH = `http://${HOST}/search?key=`;
+const API_SEARCH = `http://${HOST}/search?key=`;
+const API_VERSION = `http://${HOST}/version`;
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-      <img className="Logo" src={logo} alt="logo" />
-        <div className="App-logo">find-cards.com</div>
-        <SearchArea />
-      </header>
-      <a className="NavLink" href="#root">Back to top</a>
-      <footer className="App-footer">
-        Copyright {new Date().getFullYear()}, SciEnt | Logo supplied by <a className="FooterLink" href="https://www.vecteezy.com/free-vector/playing-card-icons">Playing Card Icons Vectors by Vecteezy</a>
-      </footer>
-    </div>
-  );
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      serverVersion: 0,
+    }
+  }
+
+  componentDidMount() {
+    fetch(API_VERSION)
+      .then(res => res.json())
+      .then((data) => {
+        this.setState({
+          serverVersion: data.version,
+        })
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+        <img className="Logo" src={logo} alt="logo" />
+          <div className="App-logo">find-cards.com</div>
+          <SearchArea />
+        </header>
+        <a className="NavLink" href="#root">Back to top</a>
+        <footer className="App-footer">
+          {this.state && this.state.serverVersion ? `v${this.state.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo supplied by <a className="FooterLink" href="https://www.vecteezy.com/free-vector/playing-card-icons">Playing Card Icons Vectors by Vecteezy</a>
+        </footer>
+      </div>
+    );
+  }
 }
 
 class SearchForm extends React.Component {
