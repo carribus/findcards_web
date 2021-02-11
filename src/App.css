@@ -152,6 +152,10 @@ body {
   .ResultItem {
     width: 220px;
   }
+
+  .SearchField {
+    font-size: 14px;
+  }  
 }
 
 @media (min-width: 375px) {
@@ -170,5 +174,9 @@ body {
   .ResultItem {
     width: 180px;
   }
+
+  .SearchField {
+    font-size: 24px;
+  }    
 }
 
