@@ -3,8 +3,8 @@ import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// const HOST = "find-cards.com/api"; 
-const HOST = "localhost:8000";
+const HOST = "find-cards.com/api"; 
+// const HOST = "localhost:8000";
 
 const API_SEARCH = `http://${HOST}/search?key=`;
 const API_VERSION = `http://${HOST}/version`;
