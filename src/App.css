@@ -30,7 +30,7 @@ body {
 }
 
 .App-header {
-  min-height: 94vh;
+  min-height: 92vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -40,7 +40,7 @@ body {
 }
 
 .App-footer {
-  min-height: 2vh;
+  min-height: 4vh;
   font-size: 14px;
   color: #6c7588;
   border-top: 2px #494e58 solid;

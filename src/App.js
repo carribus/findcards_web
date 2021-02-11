@@ -47,6 +47,7 @@ class App extends React.Component {
         </header>
         <a className="NavLink" href="#root">Back to top</a>
         <footer className="App-footer">
+          <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a><br/>
           {this.state && this.state.serverVersion ? `v${this.state.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo supplied by <a className="FooterLink" href="https://www.vecteezy.com/free-vector/playing-card-icons">Playing Card Icons Vectors by Vecteezy</a>
         </footer>
       </div>
