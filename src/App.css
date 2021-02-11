@@ -52,6 +52,11 @@ body {
   color: #61dafb;
 }
 
+.TagLine {
+  font-size: 16px;
+  font-style: italic;
+}
+
 .SearchArea {
   width: 90%;
 }

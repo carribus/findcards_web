@@ -3,27 +3,32 @@ import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const HOST = "find-cards.com/api"; 
-// const HOST = "localhost:8000";
+// const HOST = "find-cards.com/api"; 
+// const API_SEARCH = `https://${HOST}/search?key=`;
+// const API_STATS = `https://${HOST}/stats`;
 
-const API_SEARCH = `https://${HOST}/search?key=`;
-const API_VERSION = `https://${HOST}/version`;
-
+const HOST = "localhost:8000";
+const API_SEARCH = `http://${HOST}/search?key=`;
+const API_STATS = `http://${HOST}/stats`;
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       serverVersion: 0,
+      siteCount: 0,
+      deckCount: 0,
     }
   }
 
   componentDidMount() {
-    fetch(API_VERSION)
+    fetch(API_STATS)
       .then(res => res.json())
       .then((data) => {
         this.setState({
           serverVersion: data.version,
+          siteCount: data.site_count,
+          deckCount: data.deck_count,
         })
       })
       .catch((e) => {
@@ -37,6 +42,7 @@ class App extends React.Component {
         <header className="App-header">
         <img className="Logo" src={logo} alt="logo" />
           <div className="App-logo">find-cards.com</div>
+          <p class="TagLine">Over {this.state.deckCount - (this.state.deckCount % 1000)} decks indexed across {this.state.siteCount} vendors</p>
           <SearchArea />
         </header>
         <a className="NavLink" href="#root">Back to top</a>
