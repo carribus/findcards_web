@@ -66,8 +66,6 @@ body {
 }
 
 .SearchField {
-  margin-top: 10px;
-  margin-bottom: 20px;
   padding-left: 10px;
   width: 50%;
   height: 40px;
@@ -76,7 +74,8 @@ body {
 }
 
 .SearchButton {
-  height: 40px;
+  height: 47px;
+  vertical-align: top;
   padding-left: 10px;
   padding-right: 10px;
   border-radius: 10px;
