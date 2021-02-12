@@ -63,8 +63,15 @@ class App extends React.Component {
         data.sort((a, b) => {
           let ap = parseFloat(a.price);
           let bp = parseFloat(b.price);
+          
+          // sort by relevance first
+          if (a.relevance > b.relevance) return -1;
+          if (a.relevance < b.relevance) return 1;
+
+          // then by price
           if (ap < bp) return -1;
           if (ap > bp) return 1;
+
           return 0;
         });
         this.setState({
