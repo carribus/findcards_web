@@ -3,13 +3,13 @@ import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const HOST = "find-cards.com/api"; 
-const API_SEARCH = `https://${HOST}/search?key=`;
-const API_STATS = `https://${HOST}/stats`;
+// const HOST = "find-cards.com/api"; 
+// const API_SEARCH = `https://${HOST}/search?key=`;
+// const API_STATS = `https://${HOST}/stats`;
 
-// const HOST = "localhost:8000";
-// const API_SEARCH = `http://${HOST}/search?key=`;
-// const API_STATS = `http://${HOST}/stats`;
+const HOST = "localhost:8000";
+const API_SEARCH = `http://${HOST}/search?key=`;
+const API_STATS = `http://${HOST}/stats`;
 
 class App extends React.Component {
   constructor(props) {
@@ -118,8 +118,13 @@ class Header extends React.Component {
   render() {
     return (
       <div className="HeaderBar">
-        <img className="Logo" src={logo} alt="logo" />
-        <p className="LogoText">find-cards.com</p>
+        <div className="HeaderBrand">
+          <img className="Logo" src={logo} alt="logo" />
+          <p className="LogoText">find-cards.com</p>
+        </div>
+        <div className="HeaderBlurb">
+          <p className="Blurb">Find the playing cards you want at the best possible prices!</p>
+        </div>
       </div>
     )
   }
@@ -139,7 +144,6 @@ class SearchArea extends React.Component {
           onSubmit={(e) => this.props.onSubmit(e)} 
           onChange={(e) => this.props.onChange(e)} 
         />
-        {/* <ResultsArea searchText={this.state.resultsText} results={this.state.results}/> */}
       </div>
     )
   }
@@ -154,7 +158,7 @@ class SearchForm extends React.Component {
     return (
       <form onSubmit={(e) => this.props.onSubmit(e)}>
         <div className="FormContainer">
-        <p className="TagLine">Over <b>{this.props.deckCount - (this.props.deckCount % 1000)}</b> decks indexed across <b>{this.props.siteCount}</b> vendors</p>
+          <p className="TagLine">Over <b>{this.props.deckCount - (this.props.deckCount % 1000)}</b> decks indexed across <b>{this.props.siteCount}</b> vendors</p>
           <input 
             className="SearchField" 
             name="searchfield"
@@ -163,10 +167,6 @@ class SearchForm extends React.Component {
             type="text" 
             placeholder="Enter name of a deck here" 
           />
-          {/* <button
-            className="SearchButton"
-            onClick={(e) => this.props.onSubmit(e)}
-          >Search</button> */}
         </div>
       </form>
     )
@@ -193,6 +193,14 @@ class ResultsArea extends React.Component {
     super(props);
   }
 
+  filter_items(items) {
+    let top_score = items[0].relevance;
+
+    return items.filter((item) => {
+      return item.url.length > 0 && item.relevance == top_score
+    });
+  }
+
   renderItems(items) {
     let results = null;
     if (items) {
@@ -214,16 +222,18 @@ class ResultsArea extends React.Component {
   }
 
   render() {
-    const results = this.props.results;
     let label;
-    if (results) {
+    let results;
+    if (this.props.results) {
+      results = this.filter_items(this.props.results);
       label = results.length > 0 
               ? <p className="ResultLabel">Showing {results.length} results for &quot;{this.props.searchText}&quot;</p> 
               : <p className="ResultLabel">No results for &quot;{this.props.searchText}&quot;</p>
     } else {
       label = <p/>
     }
-    const items = this.renderItems(results);
+
+    const items = results ? this.renderItems(results) : [];
 
     return (
       <div className="ResultsArea">
