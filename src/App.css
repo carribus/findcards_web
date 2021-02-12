@@ -224,6 +224,10 @@ input[type="text"].SearchField {
   .TagLine {
     font-size: 12px;
   }
+
+  .Blurb {
+    font-size: 12px;
+  }
 }
 
 @media (min-width: 320px) {
@@ -240,6 +244,11 @@ input[type="text"].SearchField {
   .ResultItem {
     width: 150px;
   }
+
+  .Blurb {
+    font-size: 15px;
+  }
+  
 }
 
 @media (min-width: 600px) {
@@ -253,6 +262,10 @@ input[type="text"].SearchField {
     width: 180px;
   }
 
+  .Blurb {
+    font-size: 18px;
+  }
+  
   .SearchField {
     font-size: 24px;
   }    

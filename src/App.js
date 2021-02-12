@@ -123,7 +123,7 @@ class Header extends React.Component {
           <p className="LogoText">find-cards.com</p>
         </div>
         <div className="HeaderBlurb">
-          <p className="Blurb">Find the playing cards you want at the best possible prices!</p>
+          <p className="Blurb">Find playing cards at the best possible prices!</p>
         </div>
       </div>
     )
