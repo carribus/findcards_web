@@ -14,7 +14,11 @@ const API_STATS = `https://${HOST}/stats`;
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.submitTimerId = null;
     this.state = {
+      searchText: null,
+      resultText: null,
+      results: null,
       serverVersion: 0,
       siteCount: 0,
       deckCount: 0,
@@ -36,16 +40,56 @@ class App extends React.Component {
       })
   }
 
+  handleSearchChange(e) {
+    clearTimeout(this.submitTimerId);
+    this.setState({
+      searchText: e.target.value,
+    });
+    this.submitTimerId = setTimeout(() => {
+      clearTimeout(this.submitTimerId);
+      this.submitTimerId = null;
+      this.submitSearch();
+    }, 750)
+  }
+
+  submitSearch() {
+    if (this.state.searchText.trim().length === 0) {
+      return;
+    }
+    // make a call to the server to get the results
+    fetch(`${API_SEARCH}${this.state.searchText}`)
+      .then(res => res.json())
+      .then((data) => {
+        data.sort((a, b) => {
+          let ap = parseFloat(a.price);
+          let bp = parseFloat(b.price);
+          if (ap < bp) return -1;
+          if (ap > bp) return 1;
+          return 0;
+        });
+        this.setState({
+          resultsText: this.state.searchText,
+          results: data.filter(deck => deck.available === true)
+        })
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+  }
+
+  handleSearchSubmit(e) {
+    e.preventDefault();
+    this.submitSearch();
+  }  
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-        <img className="Logo" src={logo} alt="logo" />
-          <div className="App-logo">find-cards.com</div>
-          <p class="TagLine">Over {this.state.deckCount - (this.state.deckCount % 1000)} decks indexed across {this.state.siteCount} vendors</p>
-          <SearchArea />
-        </header>
-        <a className="NavLink" href="#root">Back to top</a>
+        <Header />
+        <SearchArea onChange={(e) => this.handleSearchChange(e)} onSubmit={(e) => this.handleSearchSubmit(e)}/>
+        <FilterArea />
+        <ResultsArea searchText={this.state.searchText} results={this.state.results}/>
+        {/* <a className="NavLink" href="#root">Back to top</a> */}
         <footer className="App-footer">
           <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a><br/>
           {this.state && this.state.serverVersion ? `v${this.state.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo supplied by <a className="FooterLink" href="https://www.vecteezy.com/free-vector/playing-card-icons">Playing Card Icons Vectors by Vecteezy</a>
@@ -55,28 +99,82 @@ class App extends React.Component {
   }
 }
 
-class SearchForm extends React.Component {
+class Header extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
     return (
+      <div className="HeaderBar">
+        <img className="Logo" src={logo} alt="logo" />
+        <p className="LogoText">find-cards.com</p>
+      </div>
+    )
+  }
+}
+
+class SearchArea extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div className="SearchArea">
+        <SearchForm 
+          onSubmit={(e) => this.props.onSubmit(e)} 
+          onChange={(e) => this.props.onChange(e)} 
+        />
+        {/* <ResultsArea searchText={this.state.resultsText} results={this.state.results}/> */}
+      </div>
+    )
+  }
+}
+
+class SearchForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      deckCount: 123123,
+      siteCount: 23,
+    }
+  }
+
+  render() {
+    return (
       <form onSubmit={(e) => this.props.onSubmit(e)}>
         <div className="FormContainer">
+        <p className="TagLine">Over <b>{this.state.deckCount - (this.state.deckCount % 1000)}</b> decks indexed across <b>{this.state.siteCount}</b> vendors</p>
           <input 
             className="SearchField" 
             name="searchfield"
+            autoComplete="off"
             onChange={(e) => this.props.onChange(e)}
             type="text" 
             placeholder="Enter name of a deck here" 
           />
-          <button
+          {/* <button
             className="SearchButton"
             onClick={(e) => this.props.onSubmit(e)}
-          >Search</button>
+          >Search</button> */}
         </div>
       </form>
+    )
+  }
+}
+
+class FilterArea extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div className="FilterArea">
+      {/* <ResultsArea searchText={this.state.resultsText} results={this.state.results}/> */}
+    </div>
+
     )
   }
 }
@@ -89,7 +187,7 @@ class ResultsArea extends React.Component {
   renderItems(items) {
     let results = null;
     if (items) {
-      results = items.map((item, index) => {
+      results = items.map((item) => {
         return (
           <div key={item.url} className="ResultItem">
             <a className="DeckLink" href={item.url} target="_blank">
@@ -119,66 +217,15 @@ class ResultsArea extends React.Component {
     const items = this.renderItems(results);
 
     return (
-      <div>
+      <div className="ResultsArea">
         {label}        
         <div className="Results">
-        {items}
-      </div>
-      </div>
-    )
-  }
-}
-
-class SearchArea extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchText: null,
-      resultsText: null,
-      results: null,
-    }
-  }
-
-  handleChange(e) {
-    this.setState({
-      searchText: e.target.value,
-    });
-  }
-
-  handleSubmit(e) {
-    // make a call to the server to get the results
-    fetch(`${API_SEARCH}${this.state.searchText}`)
-      .then(res => res.json())
-      .then((data) => {
-        data.sort((a, b) => {
-          let ap = parseFloat(a.price);
-          let bp = parseFloat(b.price);
-          if (ap < bp) return -1;
-          if (ap > bp) return 1;
-          return 0;
-        });
-        this.setState({
-          resultsText: this.state.searchText,
-          results: data.filter(deck => deck.available === true)
-        })
-      })
-      .catch((e) => {
-        console.error(e);
-      })
-    e.preventDefault();
-  }
-
-  render() {
-    return (
-      <div className="SearchArea">
-        <SearchForm 
-          onSubmit={(e) => this.handleSubmit(e)} 
-          onChange={(e) => this.handleChange(e)} 
-        />
-        <ResultsArea searchText={this.state.resultsText} results={this.state.results}/>
+          {items}
+        </div>
       </div>
     )
   }
 }
+
 
 export default App;
