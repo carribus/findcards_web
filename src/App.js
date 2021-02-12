@@ -68,7 +68,7 @@ class App extends React.Component {
           return 0;
         });
         this.setState({
-          resultsText: this.state.searchText,
+          resultText: this.state.searchText,
           results: data.filter(deck => deck.available === true)
         })
       })
@@ -88,7 +88,7 @@ class App extends React.Component {
         <Header />
         <SearchArea onChange={(e) => this.handleSearchChange(e)} onSubmit={(e) => this.handleSearchSubmit(e)}/>
         <FilterArea />
-        <ResultsArea searchText={this.state.searchText} results={this.state.results}/>
+        <ResultsArea searchText={this.state.resultText} results={this.state.results}/>
         {/* <a className="NavLink" href="#root">Back to top</a> */}
         <footer className="App-footer">
           <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a><br/>
