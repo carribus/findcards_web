@@ -1,5 +1,5 @@
 body {
-  background-color: #363b44;
+  background-color: #292c31;
 }
 
 .App {
@@ -7,10 +7,10 @@ body {
 
 }
 
-.Logo {
+/* .Logo {
   width: 200px;
   height: auto;
-}
+} */
 
 .App-logo {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -27,6 +27,66 @@ body {
   /* .App-logo {
     animation: App-logo-spin infinite 20s linear;
   } */
+}
+
+.HeaderBar {
+  width: 100%;
+  height: 60px;
+  padding: 0px;
+  margin: 0px;
+  background-color: #363b44;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  vertical-align: center;
+}
+
+.Logo {
+  height: 100%;
+}
+
+.LogoText {
+  line-height: 60px;
+  margin: 0px;
+  padding: 0px;
+  font-size: 32px;
+  color: white;
+  vertical-align: bottom;
+}
+
+.SearchArea {
+  margin-top: 35px;
+}
+
+.FormContainer {
+  height: 40px;
+}
+
+input[type="text"].SearchField {
+  min-width: 300px;
+  height: 28px;
+  font-size: 14px;
+  text-align: center;
+  border: none;
+  border-radius: 10px;
+  background-color: #363b44;
+  color: white;
+}
+
+.SearchField::placeholder {
+  font-size: 14px;
+}
+
+.SearchButton {
+  height: 47px;
+  vertical-align: top;
+  margin-top: 2px;
+  margin-left: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  background-color: #c4c4c4;
 }
 
 .App-header {
@@ -53,39 +113,17 @@ body {
 }
 
 .TagLine {
-  font-size: 16px;
+  font-size: 14px;
+  color: rgb(129, 129, 129);
   font-style: italic;
-}
-
-.SearchArea {
-  width: 90%;
-}
-
-.FormContainer {
-  height: 40px;
-}
-
-.SearchField {
-  padding-left: 10px;
-  width: 50%;
-  height: 40px;
-  border-radius: 10px;
-  font-size: 24px;
-}
-
-.SearchButton {
-  height: 47px;
-  vertical-align: top;
-  margin-top: 2px;
-  margin-left: 2px;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius: 10px;
-  background-color: #c4c4c4;
 }
 
 .SearchField:focus {
   outline: none;
+}
+
+.ResultsArea {
+  min-height: 80vh;
 }
 
 .Results {
@@ -96,7 +134,9 @@ body {
 }
 
 .ResultLabel {
-  font-size: 24px;
+  margin-top: 50px;
+  font-size: 18px;
+  color: white;
 }
 
 .ResultItem {
@@ -159,12 +199,18 @@ body {
 .NavLink, .NavLink:visited, .NavLink:active {
   color: white;
   text-decoration: none;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .FooterLink, .FooterLink:visited, .NavFooterLinkLink:active {
   color: #6c7588;
   margin-top: 10px;
+}
+
+@media (min-width: 280px) {
+  .TagLine {
+    font-size: 12px;
+  }
 }
 
 @media (min-width: 320px) {
