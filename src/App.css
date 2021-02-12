@@ -65,17 +65,22 @@ body {
 
 input[type="text"].SearchField {
   min-width: 300px;
-  height: 28px;
-  font-size: 14px;
+  height: 32px;
+  font-size: 16px;
   text-align: center;
   border: none;
   border-radius: 10px;
-  background-color: #363b44;
+  background-color: #434953;
   color: white;
 }
 
+.SearchField:focus {
+  outline: none;
+}
+
 .SearchField::placeholder {
-  font-size: 14px;
+  font-size: 16px;
+  color: #AAAAAA;
 }
 
 .SearchButton {
@@ -108,18 +113,10 @@ input[type="text"].SearchField {
   margin-top: 10px;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
 .TagLine {
   font-size: 14px;
-  color: rgb(129, 129, 129);
+  color: rgb(167, 167, 167);
   font-style: italic;
-}
-
-.SearchField:focus {
-  outline: none;
 }
 
 .ResultsArea {

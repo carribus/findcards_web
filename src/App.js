@@ -68,7 +68,7 @@ class App extends React.Component {
           return 0;
         });
         this.setState({
-          resultsText: this.state.searchText,
+          resultText: this.state.searchText,
           results: data.filter(deck => deck.available === true)
         })
       })
@@ -86,9 +86,13 @@ class App extends React.Component {
     return (
       <div className="App">
         <Header />
-        <SearchArea onChange={(e) => this.handleSearchChange(e)} onSubmit={(e) => this.handleSearchSubmit(e)}/>
+        <SearchArea 
+          deckCount={this.state.deckCount} 
+          siteCount={this.state.siteCount}
+          onChange={(e) => this.handleSearchChange(e)} 
+          onSubmit={(e) => this.handleSearchSubmit(e)}/>
         <FilterArea />
-        <ResultsArea searchText={this.state.searchText} results={this.state.results}/>
+        <ResultsArea searchText={this.state.resultText} results={this.state.results}/>
         {/* <a className="NavLink" href="#root">Back to top</a> */}
         <footer className="App-footer">
           <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a><br/>
@@ -123,6 +127,8 @@ class SearchArea extends React.Component {
     return (
       <div className="SearchArea">
         <SearchForm 
+          deckCount={this.props.deckCount}
+          siteCount={this.props.siteCount}
           onSubmit={(e) => this.props.onSubmit(e)} 
           onChange={(e) => this.props.onChange(e)} 
         />
@@ -135,17 +141,13 @@ class SearchArea extends React.Component {
 class SearchForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      deckCount: 123123,
-      siteCount: 23,
-    }
   }
 
   render() {
     return (
       <form onSubmit={(e) => this.props.onSubmit(e)}>
         <div className="FormContainer">
-        <p className="TagLine">Over <b>{this.state.deckCount - (this.state.deckCount % 1000)}</b> decks indexed across <b>{this.state.siteCount}</b> vendors</p>
+        <p className="TagLine">Over <b>{this.props.deckCount - (this.props.deckCount % 1000)}</b> decks indexed across <b>{this.props.siteCount}</b> vendors</p>
           <input 
             className="SearchField" 
             name="searchfield"
