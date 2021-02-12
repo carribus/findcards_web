@@ -153,6 +153,7 @@ body {
   max-width: 95%;
   max-height: 100px;
   height: auto;
+  border-radius: 10px;
 }
 
 .NavLink, .NavLink:visited, .NavLink:active {
