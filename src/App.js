@@ -1,13 +1,14 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
+import logo from './fc-logo-256x256.png';
 import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const HOST = "find-cards.com/api"; 
-const PROTOCOL = "https";
+// const HOST = "find-cards.com/api";
+// const PROTOCOL = "https";
 
-// const HOST = "localhost:8000";
-// const PROTOCOL = "http";
+const HOST = "localhost:8000";
+const PROTOCOL = "http";
 
 // API Endpoints
 const API_SEARCH = `${PROTOCOL}://${HOST}/search?key=`;
@@ -30,6 +31,7 @@ class App extends React.Component {
       serverVersion: 0,
       siteCount: 0,
       deckCount: 0,
+      sites: [],
     }
   }
 
@@ -39,8 +41,14 @@ class App extends React.Component {
       .then((data) => {
         this.setState({
           serverVersion: data.version,
-          siteCount: data.site_count,
+          siteCount: data.sites.length,
           deckCount: data.deck_count,
+          sites: data.sites.map((site) => {
+            return {
+              label: site.label,
+              url: site.url,
+            }
+          })
         })
       })
       .catch((e) => {
@@ -71,7 +79,7 @@ class App extends React.Component {
         data.sort((a, b) => {
           let ap = parseFloat(a.price);
           let bp = parseFloat(b.price);
-          
+
           // sort by relevance first
           if (a.relevance > b.relevance) return -1;
           if (a.relevance < b.relevance) return 1;
@@ -95,7 +103,7 @@ class App extends React.Component {
   handleSearchSubmit(e) {
     e.preventDefault();
     this.submitSearch();
-  }  
+  }
 
   handleFilterPopularSearchesChange(e) {
     this.setState({
@@ -109,19 +117,15 @@ class App extends React.Component {
     return (
       <div className="App">
         <Header />
-        <SearchArea 
-          deckCount={this.state.deckCount} 
+        <SearchArea
+          deckCount={this.state.deckCount}
           siteCount={this.state.siteCount}
           searchText={this.state.searchText}
-          onChange={(e) => this.handleSearchChange(e)} 
-          onSubmit={(e) => this.handleSearchSubmit(e)}/>
-        <FilterArea onChange={(e) => this.handleFilterPopularSearchesChange(e)}/>
-        <ResultsArea searchText={this.state.resultText} results={this.state.results}/>
-        {/* <a className="NavLink" href="#root">Back to top</a> */}
-        <footer className="App-footer">
-          <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a><br/>
-          {this.state && this.state.serverVersion ? `v${this.state.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo supplied by <a className="FooterLink" href="https://www.vecteezy.com/free-vector/playing-card-icons">Playing Card Icons Vectors by Vecteezy</a>
-        </footer>
+          onChange={(e) => this.handleSearchChange(e)}
+          onSubmit={(e) => this.handleSearchSubmit(e)} />
+        <FilterArea onChange={(e) => this.handleFilterPopularSearchesChange(e)} />
+        <ResultsArea searchText={this.state.resultText} results={this.state.results} />
+        <Footer sites={this.state.sites}/>
       </div>
     );
   }
@@ -155,12 +159,12 @@ class SearchArea extends React.Component {
   render() {
     return (
       <div className="SearchArea">
-        <SearchForm 
+        <SearchForm
           searchText={this.props.searchText}
           deckCount={this.props.deckCount}
           siteCount={this.props.siteCount}
-          onSubmit={(e) => this.props.onSubmit(e)} 
-          onChange={(e) => this.props.onChange(e)} 
+          onSubmit={(e) => this.props.onSubmit(e)}
+          onChange={(e) => this.props.onChange(e)}
         />
       </div>
     )
@@ -177,13 +181,13 @@ class SearchForm extends React.Component {
       <form onSubmit={(e) => this.props.onSubmit(e)}>
         <div className="FormContainer">
           <p className="TagLine">Over <b>{formatNumber(this.props.deckCount - (this.props.deckCount % 1000))}</b> decks indexed across <b>{this.props.siteCount}</b> vendors</p>
-          <input 
-            className="SearchField" 
+          <input
+            className="SearchField"
             name="searchfield"
             autoComplete="off"
             onChange={(e) => this.props.onChange(e)}
-            type="text" 
-            placeholder="Enter name of a deck here" 
+            type="text"
+            placeholder="Enter name of a deck here"
             value={this.props.searchText ? this.props.searchText : ""}
           />
         </div>
@@ -203,7 +207,7 @@ class FilterArea extends React.Component {
   }
 
   fetchPopularSearches() {
-    fetch(API_POPULAR_SEARCHES+this.state.searchLimit)
+    fetch(API_POPULAR_SEARCHES + this.state.searchLimit)
       .then(res => res.json())
       .then((data) => {
         this.setState({
@@ -216,7 +220,7 @@ class FilterArea extends React.Component {
   }
 
   fetchRecentSearches() {
-    fetch(API_RECENT_SEARCHES+this.state.searchLimit)
+    fetch(API_RECENT_SEARCHES + this.state.searchLimit)
       .then(res => res.json())
       .then((data) => {
         this.setState({
@@ -304,7 +308,7 @@ class ResultsArea extends React.Component {
               <p className="DeckName">{item.deck_name}</p>
               <p className="DeckPrice">{item.currency}{item.price}</p>
               <p className="SiteUrl">{item.site}</p>
-            </a>      
+            </a>
           </div>
         )
       });
@@ -318,18 +322,18 @@ class ResultsArea extends React.Component {
     let results;
     if (this.props.results) {
       results = this.filter_items(this.props.results);
-      label = results.length > 0 
-              ? <p className="ResultLabel">Showing {formatNumber(results.length)} results for &quot;{this.props.searchText}&quot;</p> 
-              : <p className="ResultLabel">No results for &quot;{this.props.searchText}&quot;</p>
+      label = results.length > 0
+        ? <p className="ResultLabel">Showing {formatNumber(results.length)} results for &quot;{this.props.searchText}&quot;</p>
+        : <p className="ResultLabel">No results for &quot;{this.props.searchText}&quot;</p>
     } else {
-      label = <p/>
+      label = <p />
     }
 
     const items = results ? this.renderItems(results) : [];
 
     return (
       <div className="ResultsArea">
-        {label}        
+        {label}
         <div className="Results">
           {items}
         </div>
@@ -338,5 +342,37 @@ class ResultsArea extends React.Component {
   }
 }
 
+class Footer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sites_visible: false,
+      sites: [],
+    }
+  }
+
+  onSiteListClick(e) {
+    console.log("Site List");
+    let sites_visible = this.state.sites_visible;
+    this.setState({
+      sites_visible: !sites_visible,
+    }, () => {
+      // once the state is set, show/hide the site list
+
+    })
+    e.preventDefault();
+  }
+
+  render() {
+    return (
+      <footer className="App-footer">
+        <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> {/*| <a className="FooterLink" href="" onClick={(e) => this.onSiteListClick(e)}>Supported Sites</a>*/}<br />
+        {this.state && this.state.serverVersion ? `v${this.state.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo designed by <a className="FooterLink" href="https://www.behance.net/melvinmercier">Melvin Mercier</a>
+      </footer>
+
+    )
+
+  }
+}
 
 export default App;
