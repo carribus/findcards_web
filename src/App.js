@@ -125,7 +125,7 @@ class App extends React.Component {
           onSubmit={(e) => this.handleSearchSubmit(e)} />
         <FilterArea onChange={(e) => this.handleFilterPopularSearchesChange(e)} />
         <ResultsArea searchText={this.state.resultText} results={this.state.results} />
-        <Footer sites={this.state.sites}/>
+        <Footer serverVersion={this.state.serverVersion} sites={this.state.sites}/>
       </div>
     );
   }
@@ -346,6 +346,7 @@ class Footer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      serverVersion: null,
       sites_visible: false,
       sites: [],
     }
