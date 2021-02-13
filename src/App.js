@@ -3,13 +3,14 @@ import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const HOST = "find-cards.com/api"; 
-const PROTOCOL = "https";
+// const HOST = "find-cards.com/api"; 
+// const PROTOCOL = "https";
 
-// const HOST = "localhost:8000";
-// const PROTOCOL = "http";
+const HOST = "localhost:8000";
+const PROTOCOL = "http";
 const API_SEARCH = `${PROTOCOL}://${HOST}/search?key=`;
 const API_POPULAR_SEARCHES = `${PROTOCOL}://${HOST}/search/popular?limit=`;
+const API_RECENT_SEARCHES = `${PROTOCOL}://${HOST}/search/recent?limit=`;
 const API_STATS = `${PROTOCOL}://${HOST}/stats`;
 
 class App extends React.Component {
@@ -191,10 +192,11 @@ class FilterArea extends React.Component {
     this.state = {
       searchLimit: 10,
       popularSearches: [],
+      recentSearches: [],
     }
   }
 
-  componentDidMount() {
+  fetchPopularSearches() {
     fetch(API_POPULAR_SEARCHES+this.state.searchLimit)
       .then(res => res.json())
       .then((data) => {
@@ -204,7 +206,25 @@ class FilterArea extends React.Component {
       })
       .catch((e) => {
         console.error(e);
-      })    
+      });
+  }
+
+  fetchRecentSearches() {
+    fetch(API_RECENT_SEARCHES+this.state.searchLimit)
+      .then(res => res.json())
+      .then((data) => {
+        this.setState({
+          recentSearches: data,
+        });
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+
+  componentDidMount() {
+    this.fetchPopularSearches();
+    this.fetchRecentSearches();
   }
 
   renderPopularSearchItems(limit) {
@@ -221,13 +241,30 @@ class FilterArea extends React.Component {
     return result;
   }
 
+  renderRecentSearchItems(limit) {
+    let result = null;
+    if (this.state.recentSearches.length > 0) {
+      let recentSearches = this.state.recentSearches.slice();
+      result = recentSearches.map((item, index) => {
+        return (
+          <option key={index} value={item.search_text}>{item.search_text}</option>
+        )
+      })
+    }
+
+    return result;
+  }
+
   render() {
     return (
       <div className="FilterArea">
-        {/* <label className="FormLabel" for="vendorlist">Top 10 Searches:</label> */}
-        <select id="vendorlist" className="DropdownFilter" defaultValue="--" onChange={(e) => this.props.onChange(e)}>
+        <select id="top_searches" className="DropdownFilter" defaultValue="--" onChange={(e) => this.props.onChange(e)}>
           <option disabled value="--">Top 10 Searches</option>
           {this.renderPopularSearchItems(this.state.searchLimit)}
+        </select>
+        <select id="recent_searches" className="DropdownFilter" defaultValue="--" onChange={(e) => this.props.onChange(e)}>
+          <option disabled value="--">Recent Searches</option>
+          {this.renderRecentSearchItems(this.state.searchLimit)}
         </select>
       </div>
     )

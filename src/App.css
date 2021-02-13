@@ -8,28 +8,6 @@ body {
   flex-direction: column;
 }
 
-/* .Logo {
-  width: 200px;
-  height: auto;
-} */
-
-.App-logo {
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  font-size: 48px;
-  color: white;
-  padding-left: 10px;
-  padding-right: 10px;
-  pointer-events: none;
-  border-radius: 5px;
-  border-color: black;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  /* .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  } */
-}
-
 .HeaderBar {
   width: 100%;
   background-color: #363b44;
@@ -53,6 +31,13 @@ body {
   margin-top: 10px;
 }
 
+.Blurb {
+  color: rgb(202, 202, 202);
+  font-size: 15px;
+  margin: 0px;
+}
+
+
 .Logo {
   height: 60px;
 }
@@ -64,12 +49,6 @@ body {
   font-size: 32px;
   color: white;
   vertical-align: bottom;
-}
-
-.Blurb {
-  color: rgb(202, 202, 202);
-  font-size: 15px;
-  margin: 0px;
 }
 
 .SearchArea {
@@ -144,12 +123,15 @@ input[type="text"].SearchField {
 }
 
 .FilterArea {
-  margin-top: 20px;
+  margin-top: 15px;
+  justify-content: center;
 }
 
 .DropdownFilter {
   height: 28px;
-  font-size: 14px;
+  font-size: 13px;
+  margin-left: 10px;
+  margin-right: 10px;
   border: none;
   border-radius: 5px;
   padding-left: 4px;
