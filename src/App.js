@@ -15,6 +15,10 @@ const API_POPULAR_SEARCHES = `${PROTOCOL}://${HOST}/search/popular?limit=`;
 const API_RECENT_SEARCHES = `${PROTOCOL}://${HOST}/search/recent?limit=`;
 const API_STATS = `${PROTOCOL}://${HOST}/stats`;
 
+function formatNumber(num) {
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -172,7 +176,7 @@ class SearchForm extends React.Component {
     return (
       <form onSubmit={(e) => this.props.onSubmit(e)}>
         <div className="FormContainer">
-          <p className="TagLine">Over <b>{this.props.deckCount - (this.props.deckCount % 1000)}</b> decks indexed across <b>{this.props.siteCount}</b> vendors</p>
+          <p className="TagLine">Over <b>{formatNumber(this.props.deckCount - (this.props.deckCount % 1000))}</b> decks indexed across <b>{this.props.siteCount}</b> vendors</p>
           <input 
             className="SearchField" 
             name="searchfield"
@@ -315,7 +319,7 @@ class ResultsArea extends React.Component {
     if (this.props.results) {
       results = this.filter_items(this.props.results);
       label = results.length > 0 
-              ? <p className="ResultLabel">Showing {results.length} results for &quot;{this.props.searchText}&quot;</p> 
+              ? <p className="ResultLabel">Showing {formatNumber(results.length)} results for &quot;{this.props.searchText}&quot;</p> 
               : <p className="ResultLabel">No results for &quot;{this.props.searchText}&quot;</p>
     } else {
       label = <p/>
