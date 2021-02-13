@@ -194,7 +194,10 @@ class ResultsArea extends React.Component {
   }
 
   filter_items(items) {
-    let top_score = items[0].relevance;
+    let top_score = 0;
+    if (items && items.length) {
+      top_score = items[0].relevance;
+    }
 
     return items.filter((item) => {
       return item.url.length > 0 && item.relevance == top_score
