@@ -3,11 +3,13 @@ import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// const HOST = "find-cards.com/api"; 
-// const PROTOCOL = "https";
+const HOST = "find-cards.com/api"; 
+const PROTOCOL = "https";
 
-const HOST = "localhost:8000";
-const PROTOCOL = "http";
+// const HOST = "localhost:8000";
+// const PROTOCOL = "http";
+
+// API Endpoints
 const API_SEARCH = `${PROTOCOL}://${HOST}/search?key=`;
 const API_POPULAR_SEARCHES = `${PROTOCOL}://${HOST}/search/popular?limit=`;
 const API_RECENT_SEARCHES = `${PROTOCOL}://${HOST}/search/recent?limit=`;
