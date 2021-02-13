@@ -4,7 +4,8 @@ body {
 
 .App {
   text-align: center;
-
+  display: flex;
+  flex-direction: column;
 }
 
 /* .Logo {
@@ -73,10 +74,12 @@ body {
 
 .SearchArea {
   margin-top: 25px;
+  display: flex;
+  flex-direction: column;
 }
 
 .FormContainer {
-  height: 40px;
+  
 }
 
 input[type="text"].SearchField {
@@ -110,7 +113,7 @@ input[type="text"].SearchField {
   background-color: #c4c4c4;
 }
 
-.App-header {
+/* .App-header {
   min-height: 92vh;
   display: flex;
   flex-direction: column;
@@ -118,7 +121,7 @@ input[type="text"].SearchField {
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
+} */
 
 .App-footer {
   min-height: 4vh;
@@ -133,6 +136,25 @@ input[type="text"].SearchField {
   font-size: 14px;
   color: rgb(167, 167, 167);
   font-style: italic;
+}
+
+.FormLabel {
+  color: white;
+  margin-right: 5px;
+}
+
+.FilterArea {
+  margin-top: 20px;
+}
+
+.DropdownFilter {
+  height: 28px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  padding-left: 4px;
+  background-color: #434953;
+  color: white;
 }
 
 .ResultsArea {

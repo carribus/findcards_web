@@ -4,12 +4,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 const HOST = "find-cards.com/api"; 
-const API_SEARCH = `https://${HOST}/search?key=`;
-const API_STATS = `https://${HOST}/stats`;
+const PROTOCOL = "https";
 
 // const HOST = "localhost:8000";
-// const API_SEARCH = `http://${HOST}/search?key=`;
-// const API_STATS = `http://${HOST}/stats`;
+// const PROTOCOL = "http";
+const API_SEARCH = `${PROTOCOL}://${HOST}/search?key=`;
+const API_POPULAR_SEARCHES = `${PROTOCOL}://${HOST}/search/popular?limit=`;
+const API_STATS = `${PROTOCOL}://${HOST}/stats`;
 
 class App extends React.Component {
   constructor(props) {
@@ -89,6 +90,14 @@ class App extends React.Component {
     this.submitSearch();
   }  
 
+  handleFilterPopularSearchesChange(e) {
+    this.setState({
+      searchText: e.target.value
+    }, () => {
+      this.submitSearch();
+    });
+  }
+
   render() {
     return (
       <div className="App">
@@ -96,9 +105,10 @@ class App extends React.Component {
         <SearchArea 
           deckCount={this.state.deckCount} 
           siteCount={this.state.siteCount}
+          searchText={this.state.searchText}
           onChange={(e) => this.handleSearchChange(e)} 
           onSubmit={(e) => this.handleSearchSubmit(e)}/>
-        <FilterArea />
+        <FilterArea onChange={(e) => this.handleFilterPopularSearchesChange(e)}/>
         <ResultsArea searchText={this.state.resultText} results={this.state.results}/>
         {/* <a className="NavLink" href="#root">Back to top</a> */}
         <footer className="App-footer">
@@ -139,6 +149,7 @@ class SearchArea extends React.Component {
     return (
       <div className="SearchArea">
         <SearchForm 
+          searchText={this.props.searchText}
           deckCount={this.props.deckCount}
           siteCount={this.props.siteCount}
           onSubmit={(e) => this.props.onSubmit(e)} 
@@ -166,6 +177,7 @@ class SearchForm extends React.Component {
             onChange={(e) => this.props.onChange(e)}
             type="text" 
             placeholder="Enter name of a deck here" 
+            value={this.props.searchText ? this.props.searchText : ""}
           />
         </div>
       </form>
@@ -176,14 +188,48 @@ class SearchForm extends React.Component {
 class FilterArea extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      searchLimit: 10,
+      popularSearches: [],
+    }
+  }
+
+  componentDidMount() {
+    fetch(API_POPULAR_SEARCHES+this.state.searchLimit)
+      .then(res => res.json())
+      .then((data) => {
+        this.setState({
+          popularSearches: data,
+        });
+      })
+      .catch((e) => {
+        console.error(e);
+      })    
+  }
+
+  renderPopularSearchItems(limit) {
+    let result = null;
+    if (this.state.popularSearches.length > 0) {
+      let popularSearches = this.state.popularSearches.slice();
+      result = popularSearches.map((item, index) => {
+        return (
+          <option key={index} value={item.search_text}>{item.search_text}</option>
+        )
+      })
+    }
+
+    return result;
   }
 
   render() {
     return (
       <div className="FilterArea">
-      {/* <ResultsArea searchText={this.state.resultsText} results={this.state.results}/> */}
-    </div>
-
+        {/* <label className="FormLabel" for="vendorlist">Top 10 Searches:</label> */}
+        <select id="vendorlist" className="DropdownFilter" defaultValue="--" onChange={(e) => this.props.onChange(e)}>
+          <option disabled value="--">Top 10 Searches</option>
+          {this.renderPopularSearchItems(this.state.searchLimit)}
+        </select>
+      </div>
     )
   }
 }
