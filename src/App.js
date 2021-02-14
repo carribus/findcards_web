@@ -48,6 +48,8 @@ class App extends React.Component {
               label: site.label,
               url: site.url,
             }
+          }).sort((a, b) => {
+            return a.label > b.label ? 1 : a.label < b.label ? -1 : 0;
           })
         })
       })
@@ -118,10 +120,6 @@ class App extends React.Component {
     let sites_visible = this.state.sites_visible;
     this.setState({
       sites_visible: !sites_visible,
-    }, () => {
-      // once the state is set, show/hide the site list
-
-
     })
     e.preventDefault();
   }
@@ -190,7 +188,10 @@ class SiteList extends React.Component {
         <div>
           <button onClick={(e) => this.props.onClose(e)}className="CloseButton">X</button>
         </div>
-        <p>The following {this.props.sites.length} online stores are currently supported by find-cards.com:</p>
+        <p>
+          The following {this.props.sites.length} online stores are currently supported by find-cards.com.<br/> 
+          If you would like a site added, <a href="mailto:peter@find-cards.com">send us a mail</a>
+        </p>
         <div className="ScrollablePanel">
           <ul>
             {this.renderSiteList()}

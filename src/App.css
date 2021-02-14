@@ -34,7 +34,7 @@ body {
 .ScrollablePanel {
   overflow-x: hidden;
   overflow-y: auto;
-  height: 85%;
+  height: 80%;
 }
 
 ul > li {
