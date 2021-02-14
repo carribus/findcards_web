@@ -168,23 +168,21 @@ class SiteList extends React.Component {
   renderSiteList() {
     return this.props.sites.map((site) => {
       return (
-        <li><a href={site.url}>{site.label}</a></li>
+        <li key={site.label}><a href={site.url}>{site.label}</a></li>
       )
     })
   }
 
   render() {
     let width = window.innerWidth * 0.6;
-    let height = window.innerHeight * 0.5;
-    let top = 50 + '%';
+    let height = window.innerHeight * 0.6;
+    let top = window.innerHeight/2 - height/2 + this.state.yOffset;
     let left = 50 + '%';
-    let siteList = '';
-    let marginTop = -height/2;
     let marginLeft = -width/2;
     let display = this.props.visible ? "block" : "none";
 
     return (
-      <div className="SiteList" style={{display, width, height, top, left, marginTop, marginLeft ,position: 'absolute'}}>
+      <div className="SiteList" style={{display, width, height, top, left, marginLeft, position: 'absolute'}}>
         <div>
           <button onClick={(e) => this.props.onClose(e)}className="CloseButton">X</button>
         </div>

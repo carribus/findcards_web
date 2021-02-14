@@ -9,8 +9,6 @@ body {
 }
 
 .SiteList {
-
-  /* content: "Hello world"; */
   display: flex;
   flex-direction: column;
   padding: 10px 10px 10px 10px;
@@ -159,8 +157,8 @@ input[type="text"].SearchField {
   border: none;
   border-radius: 5px;
   padding-left: 4px;
-  background-color: #434953;
-  color: white;
+  /* background-color: #434953; */
+  /* color: white; */
 }
 
 .DropdownFilter:focus {
@@ -262,6 +260,10 @@ input[type="text"].SearchField {
   .Blurb {
     font-size: 12px;
   }
+
+  .SiteList {
+    font-size: 12px;
+  }
 }
 
 @media (min-width: 320px) {
@@ -272,6 +274,10 @@ input[type="text"].SearchField {
   .SearchField {
     font-size: 14px;
   }  
+
+  .SiteList {
+    font-size: 12px;
+  }
 }
 
 @media (min-width: 375px) {
@@ -283,11 +289,18 @@ input[type="text"].SearchField {
     font-size: 15px;
   }
   
+  .SiteList {
+    font-size: 12px;
+  }
 }
 
 @media (min-width: 600px) {
   .ResultItem {
     width: 150px;
+  }
+
+  .SiteList {
+    font-size: 12px;
   }
 }
 
