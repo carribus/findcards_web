@@ -1,4 +1,3 @@
-// import logo from './logo.svg';
 import logo from './fc-logo-256x256.png';
 import './App.css';
 import React from 'react';
@@ -32,6 +31,7 @@ class App extends React.Component {
       siteCount: 0,
       deckCount: 0,
       sites: [],
+      sites_visible: false,
     }
   }
 
@@ -113,9 +113,26 @@ class App extends React.Component {
     });
   }
 
+  onShowSiteList(e) {
+    console.log("Site List");
+    let sites_visible = this.state.sites_visible;
+    this.setState({
+      sites_visible: !sites_visible,
+    }, () => {
+      // once the state is set, show/hide the site list
+
+
+    })
+    e.preventDefault();
+  }
+
   render() {
     return (
       <div className="App">
+        <SiteList 
+          sites={this.state.sites} 
+          visible={this.state.sites_visible}
+          onClose={(e) => this.onShowSiteList(e)} />
         <Header />
         <SearchArea
           deckCount={this.state.deckCount}
@@ -125,9 +142,62 @@ class App extends React.Component {
           onSubmit={(e) => this.handleSearchSubmit(e)} />
         <FilterArea onChange={(e) => this.handleFilterPopularSearchesChange(e)} />
         <ResultsArea searchText={this.state.resultText} results={this.state.results} />
-        <Footer serverVersion={this.state.serverVersion} sites={this.state.sites}/>
+        <Footer 
+          serverVersion={this.state.serverVersion} 
+          onShowSiteList={(e) => this.onShowSiteList(e)}
+        />
       </div>
     );
+  }
+}
+
+class SiteList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      yOffset: window.pageYOffset,
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', (e) => {
+      this.setState({
+        yOffset: window.pageYOffset,
+      })
+    })
+  }
+
+  renderSiteList() {
+    return this.props.sites.map((site) => {
+      return (
+        <li><a href={site.url}>{site.label}</a></li>
+      )
+    })
+  }
+
+  render() {
+    let width = window.innerWidth * 0.6;
+    let height = window.innerHeight * 0.5;
+    let top = 50 + '%';
+    let left = 50 + '%';
+    let siteList = '';
+    let marginTop = -height/2;
+    let marginLeft = -width/2;
+    let display = this.props.visible ? "block" : "none";
+
+    return (
+      <div className="SiteList" style={{display, width, height, top, left, marginTop, marginLeft ,position: 'absolute'}}>
+        <div>
+          <button onClick={(e) => this.props.onClose(e)}className="CloseButton">X</button>
+        </div>
+        <p>The following {this.props.sites.length} online stores are currently supported by find-cards.com:</p>
+        <div className="ScrollablePanel">
+          <ul>
+            {this.renderSiteList()}
+          </ul>
+        </div>
+      </div>
+    )
   }
 }
 
@@ -345,30 +415,13 @@ class ResultsArea extends React.Component {
 class Footer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      serverVersion: null,
-      sites_visible: false,
-      sites: [],
-    }
-  }
-
-  onSiteListClick(e) {
-    console.log("Site List");
-    let sites_visible = this.state.sites_visible;
-    this.setState({
-      sites_visible: !sites_visible,
-    }, () => {
-      // once the state is set, show/hide the site list
-
-    })
-    e.preventDefault();
   }
 
   render() {
     return (
       <footer className="App-footer">
-        <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> {/*| <a className="FooterLink" href="" onClick={(e) => this.onSiteListClick(e)}>Supported Sites</a>*/}<br />
-        {this.state && this.state.serverVersion ? `v${this.state.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo designed by <a className="FooterLink" href="https://www.behance.net/melvinmercier">Melvin Mercier</a>
+        <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> | <a className="FooterLink" href="" onClick={(e) => this.props.onShowSiteList(e)}>Supported Sites</a><br />
+        {this.props.serverVersion ? `v${this.props.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo designed by <a className="FooterLink" href="https://www.behance.net/melvinmercier">Melvin Mercier</a>
       </footer>
 
     )
