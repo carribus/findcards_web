@@ -495,7 +495,7 @@ class ResultsArea extends React.Component {
         </div>
         {labelSuggestions}
         <div className="Results">
-          {suggested_items}}
+          {suggested_items}
         </div>
       </div>
     )
