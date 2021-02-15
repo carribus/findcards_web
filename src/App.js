@@ -32,10 +32,28 @@ class App extends React.Component {
       deckCount: 0,
       sites: [],
       sites_visible: false,
+      regions: [],
     }
   }
 
   componentDidMount() {
+    const get_unique_regions = (sites) => {
+      let regions = [];
+      sites.map((site) => {
+        if (regions.indexOf(site.region) == -1) {
+          regions.push(site.region);
+        }
+      });
+
+      regions.sort((a, b) => {
+        if (a > b) return 1;
+        if (a < b) return -1;
+        return 0;
+      })
+
+      return regions;
+    };
+
     fetch(API_STATS)
       .then(res => res.json())
       .then((data) => {
@@ -47,10 +65,14 @@ class App extends React.Component {
             return {
               label: site.label,
               url: site.url,
+              currency: site.currency,
+              region: site.region,
             }
           }).sort((a, b) => {
             return a.label > b.label ? 1 : a.label < b.label ? -1 : 0;
-          })
+          }),
+          regions: get_unique_regions(data.sites),
+          selectedRegion: 'All',
         })
       })
       .catch((e) => {
@@ -115,6 +137,12 @@ class App extends React.Component {
     });
   }
 
+  handleRegionChange(e) {
+    this.setState({
+      selectedRegion: e.target.value
+    })
+  }
+
   onShowSiteList(e) {
     console.log("Site List");
     let sites_visible = this.state.sites_visible;
@@ -138,8 +166,12 @@ class App extends React.Component {
           searchText={this.state.searchText}
           onChange={(e) => this.handleSearchChange(e)}
           onSubmit={(e) => this.handleSearchSubmit(e)} />
-        <FilterArea onChange={(e) => this.handleFilterPopularSearchesChange(e)} />
-        <ResultsArea searchText={this.state.resultText} results={this.state.results} />
+        <FilterArea 
+          regions={this.state.regions} 
+          onChange={(e) => this.handleFilterPopularSearchesChange(e)} 
+          onRegionChange={(e) => this.handleRegionChange(e)}
+        />
+        <ResultsArea region={this.state.selectedRegion} sites={this.state.sites} searchText={this.state.resultText} results={this.state.results} />
         <Footer 
           serverVersion={this.state.serverVersion} 
           onShowSiteList={(e) => this.onShowSiteList(e)}
@@ -334,6 +366,15 @@ class FilterArea extends React.Component {
     return result;
   }
 
+  renderRegionItems() {
+    let regions = this.props.regions.slice();
+    return regions.map((item) => {
+      return (
+        <option key={item} value={item}>{item}</option>
+      )
+    })
+  }
+
   render() {
     return (
       <div className="FilterArea">
@@ -344,6 +385,10 @@ class FilterArea extends React.Component {
         <select id="recent_searches" className="DropdownFilter" defaultValue="--" onChange={(e) => this.props.onChange(e)}>
           <option disabled value="--">Recent Searches</option>
           {this.renderRecentSearchItems(this.state.searchLimit)}
+        </select>
+        <select id="region" className="DropdownFilter" defaultValue="All" onChange={(e) => this.props.onRegionChange(e)}>
+          <option value="All">All Regions</option>
+          {this.renderRegionItems()}
         </select>
       </div>
     )
@@ -362,28 +407,44 @@ class ResultsArea extends React.Component {
     }
 
     return items.filter((item) => {
-      return item.url.length > 0 && item.relevance == top_score
+      return item.url.length > 0 && item.relevance == top_score && this.isItemInRegion(item)
     });
+  }
+
+  isItemInRegion(item) {
+    return this.props.sites.find((site) => {
+      return this.props.region == 'All' || (site.url == item.site && site.region == this.props.region)
+    })
   }
 
   renderItems(items) {
     let results = null;
     if (items) {
       results = items.map((item) => {
-        return (
-          <div key={item.url} className="ResultItem">
-            <a className="DeckLink" href={item.url} target="_blank">
-              <img className="Thumbnail" src={item.image_url} />
-              <p className="DeckName">{item.deck_name}</p>
-              <p className="DeckPrice">{item.currency}{item.price}</p>
-              <p className="SiteUrl">{item.site}</p>
-            </a>
-          </div>
-        )
+        if (this.isItemInRegion(item)) {
+          return (
+            <div key={item.url} className="ResultItem">
+              <a className="DeckLink" href={item.url} target="_blank">
+                <img className="Thumbnail" src={item.image_url} />
+                <p className="DeckName">{item.deck_name}</p>
+                <p className="DeckPrice">{item.currency}{item.price}</p>
+                <p className="SiteUrl">{item.site}</p>
+              </a>
+            </div>
+          )
+        }
       });
     }
 
     return results;
+  }
+
+  renderSelectedRegion() {
+    if (this.props.region == "All") {
+      return "globally"
+    } else {
+      return `in ${this.props.region}`;
+    }
   }
 
   render() {
@@ -392,7 +453,7 @@ class ResultsArea extends React.Component {
     if (this.props.results) {
       results = this.filter_items(this.props.results);
       label = results.length > 0
-        ? <p className="ResultLabel">Showing {formatNumber(results.length)} results for &quot;{this.props.searchText}&quot;</p>
+        ? <p className="ResultLabel">Showing {formatNumber(results.length)} results for &quot;{this.props.searchText}&quot; {this.renderSelectedRegion()}</p>
         : <p className="ResultLabel">No results for &quot;{this.props.searchText}&quot;</p>
     } else {
       label = <p />
