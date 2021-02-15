@@ -14,6 +14,7 @@ const API_SEARCH = `${PROTOCOL}://${HOST}/search?key=`;
 const API_POPULAR_SEARCHES = `${PROTOCOL}://${HOST}/search/popular?limit=`;
 const API_RECENT_SEARCHES = `${PROTOCOL}://${HOST}/search/recent?limit=`;
 const API_STATS = `${PROTOCOL}://${HOST}/stats`;
+const API_EVENT_POST = `${PROTOCOL}://${HOST}/data/event`
 
 function formatNumber(num) {
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
@@ -241,7 +242,7 @@ class Header extends React.Component {
     return (
       <div className="HeaderBar">
         <div className="HeaderBrand">
-          <img className="Logo" src={logo} alt="logo" />
+          <img className="Logo" src={logo} alt="find-cards logo" />
           <p className="LogoText">find-cards.com</p>
         </div>
         <div className="HeaderBlurb">
@@ -436,6 +437,27 @@ class ResultsArea extends React.Component {
     return site.label;
   }
 
+  onLinkClick(item) {
+    let event = {
+      event_type: 'product_click',
+      data: item,
+    };
+
+    fetch(API_EVENT_POST, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(event)
+    }, (e) => {
+      console.log(e);
+      console.log('click submitted');
+    })
+  }
+
   renderItems(items, itemClass = "ResultItem") {
     let results = null;
     if (items) {
@@ -444,7 +466,7 @@ class ResultsArea extends React.Component {
           let siteName = this.siteFromURL(item.site);
           return (
             <div key={item.url} className={itemClass}>
-              <a className="DeckLink" href={item.url} target="_blank">
+              <a className="DeckLink" href={item.url} target="_blank" onClick={(e) => this.onLinkClick({item})}>
                 <img className="Thumbnail" src={item.image_url} />
                 <p className="DeckName">{item.deck_name}</p>
                 <p className="DeckPrice">{item.currency}{item.price}</p>
