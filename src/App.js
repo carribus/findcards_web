@@ -400,7 +400,8 @@ class ResultsArea extends React.Component {
     super(props);
   }
 
-  filter_items(items) {
+  // keeps only relevant items (where the relevance score is equal to the number of worlds)
+  filter_relevant_items(items) {
     let top_score = 0;
     if (items && items.length) {
       top_score = items[0].relevance;
@@ -411,24 +412,43 @@ class ResultsArea extends React.Component {
     });
   }
 
+  filter_suggestions(items) {
+    let top_score = 0;
+    if (items && items.length) {
+      top_score = items[0].relevance;
+    }
+
+    return items.filter((item) => {
+      return item.url.length > 0 && item.relevance < top_score && this.isItemInRegion(item)
+    });
+  }
+
   isItemInRegion(item) {
     return this.props.sites.find((site) => {
       return this.props.region == 'All' || (site.url == item.site && site.region == this.props.region)
     })
   }
 
-  renderItems(items) {
+  siteFromURL(url) {
+    let site = this.props.sites.find((site) => {
+      return site.url == url;
+    });
+    return site.label;
+  }
+
+  renderItems(items, itemClass = "ResultItem") {
     let results = null;
     if (items) {
       results = items.map((item) => {
         if (this.isItemInRegion(item)) {
+          let siteName = this.siteFromURL(item.site);
           return (
-            <div key={item.url} className="ResultItem">
+            <div key={item.url} className={itemClass}>
               <a className="DeckLink" href={item.url} target="_blank">
                 <img className="Thumbnail" src={item.image_url} />
                 <p className="DeckName">{item.deck_name}</p>
                 <p className="DeckPrice">{item.currency}{item.price}</p>
-                <p className="SiteUrl">{item.site}</p>
+                <p className="SiteUrl">{siteName}</p>
               </a>
             </div>
           )
@@ -448,24 +468,34 @@ class ResultsArea extends React.Component {
   }
 
   render() {
-    let label;
-    let results;
+    let labelResults, labelSuggestions;
+    let results, suggestions;
+
     if (this.props.results) {
-      results = this.filter_items(this.props.results);
-      label = results.length > 0
-        ? <p className="ResultLabel">Showing {formatNumber(results.length)} results for &quot;{this.props.searchText}&quot; {this.renderSelectedRegion()}</p>
+      results = this.filter_relevant_items(this.props.results);
+      suggestions = this.filter_suggestions(this.props.results);
+      labelResults = results.length > 0
+        ? <p className="ResultLabel">Showing {formatNumber(results.length)} matches for &quot;{this.props.searchText}&quot; {this.renderSelectedRegion()}</p>
         : <p className="ResultLabel">No results for &quot;{this.props.searchText}&quot;</p>
+      labelSuggestions = suggestions.length > 0 
+        ? <p className="SuggestionLabel">Showing {formatNumber(suggestions.length)} alternative suggestions {this.renderSelectedRegion()}</p>
+        : <p/>
     } else {
-      label = <p />
+      labelResults = <p />
     }
 
     const items = results ? this.renderItems(results) : [];
+    const suggested_items = results ? this.renderItems(suggestions, "SuggestionItem") : [];
 
     return (
       <div className="ResultsArea">
-        {label}
+        {labelResults}
         <div className="Results">
           {items}
+        </div>
+        {labelSuggestions}
+        <div className="Results">
+          {suggested_items}}
         </div>
       </div>
     )
