@@ -532,8 +532,15 @@ class Footer extends React.Component {
   render() {
     return (
       <footer className="App-footer">
-        <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> | <a className="FooterLink" href="" onClick={(e) => this.props.onShowSiteList(e)}>Supported Sites</a><br />
-        {this.props.serverVersion ? `v${this.props.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo designed by <a className="FooterLink" href="https://www.behance.net/melvinmercier">Melvin Mercier</a>
+        <center>
+        <a href="https://www.producthunt.com/posts/find-cards?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-find-cards" target="_blank">
+          <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=284756&theme=light" alt="find-cards - Find the playing cards you want at the best price | Product Hunt" style={{width: "180px", height: "auto", display: "block", position: "static"}}/>
+        </a>
+        </center>
+        <div>
+          <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> | <a className="FooterLink" href="" onClick={(e) => this.props.onShowSiteList(e)}>Supported Sites</a><br />
+          {this.props.serverVersion ? `v${this.props.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo designed by <a className="FooterLink" href="https://www.behance.net/melvinmercier">Melvin Mercier</a>
+        </div>
       </footer>
 
     )

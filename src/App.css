@@ -131,6 +131,9 @@ input[type="text"].SearchField {
   border-top: 2px #494e58 solid;
   padding-top: 10px;
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .TagLine {
@@ -166,7 +169,7 @@ input[type="text"].SearchField {
 
 
 .ResultsArea {
-  min-height: 75vh;
+  min-height: 73vh;
 }
 
 .Results {
