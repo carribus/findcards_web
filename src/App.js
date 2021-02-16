@@ -139,6 +139,9 @@ class App extends React.Component {
     if (this.state.searchText.trim().length === 0) {
       return;
     }
+    if (this.state.searchText == this.state.resultText) {
+      return;
+    }
     // make a call to the server to get the results
     fetch(`${API_SEARCH}${this.state.searchText}`)
       .then(res => res.json())
