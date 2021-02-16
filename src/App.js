@@ -140,6 +140,8 @@ class App extends React.Component {
       return;
     }
     if (this.state.searchText == this.state.resultText) {
+      if (this.submitTimerId) clearTimeout(this.submitTimerId);
+      this.submitTimerId = null;
       return;
     }
     // make a call to the server to get the results
