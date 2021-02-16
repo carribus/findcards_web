@@ -16,6 +16,9 @@ const API_RECENT_SEARCHES = `${PROTOCOL}://${HOST}/search/recent?limit=`;
 const API_STATS = `${PROTOCOL}://${HOST}/stats`;
 const API_EVENT_POST = `${PROTOCOL}://${HOST}/data/event`
 
+// CURRENCY API
+const API_EXCHANGE_RATES = "https://api.exchangeratesapi.io";
+
 function formatNumber(num) {
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
@@ -34,6 +37,8 @@ class App extends React.Component {
       sites: [],
       sites_visible: false,
       regions: [],
+      exchangeRates: {},
+      targetCurrency: null,
     }
   }
 
@@ -81,6 +86,43 @@ class App extends React.Component {
       })
   }
 
+  handleTargetCurrencyChange(curr) {
+    let target = null;
+
+    if (this.state.targetCurrency != curr) {
+      target = curr;
+    }
+
+    this.setState({
+      targetCurrency: target,
+      rates: null,
+    }, () => {
+      this.fetchCurrencyPairs(target);
+    })
+  }
+
+  fetchCurrencyPairs(baseCurrency) {
+    let today = new Date();
+    let url = `${API_EXCHANGE_RATES}/${today.getFullYear()}-${today.getUTCMonth()+1}-${today.getUTCDate()}?base=${baseCurrency}`
+
+    // make sure that we don't refetch exchange rates that we already have
+    if (!this.state.exchangeRates[baseCurrency]) {
+      let er = {...this.state.exchangeRates};
+
+      fetch(url)
+      .then(res => res.json())
+      .then((data) => {
+        er[baseCurrency] = data.rates;
+        this.setState({
+          exchangeRates: er,
+        })
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+    }
+  }
+
   handleSearchChange(e) {
     clearTimeout(this.submitTimerId);
     this.setState({
@@ -117,7 +159,11 @@ class App extends React.Component {
         });
         this.setState({
           resultText: this.state.searchText,
-          results: data.filter(deck => deck.available === true)
+          results: data.map(deck => {
+            deck.price = deck.price.replace(",", ".");
+            return deck;
+          })
+          .filter(deck => deck.available === true)
         })
       })
       .catch((e) => {
@@ -165,6 +211,8 @@ class App extends React.Component {
           deckCount={this.state.deckCount}
           siteCount={this.state.siteCount}
           searchText={this.state.searchText}
+          targetCurrency={this.state.targetCurrency}
+          onTargetCurrencyChange={(e) => this.handleTargetCurrencyChange(e)}
           onChange={(e) => this.handleSearchChange(e)}
           onSubmit={(e) => this.handleSearchSubmit(e)} />
         <FilterArea 
@@ -172,7 +220,14 @@ class App extends React.Component {
           onChange={(e) => this.handleFilterPopularSearchesChange(e)} 
           onRegionChange={(e) => this.handleRegionChange(e)}
         />
-        <ResultsArea region={this.state.selectedRegion} sites={this.state.sites} searchText={this.state.resultText} results={this.state.results} />
+        <ResultsArea 
+          region={this.state.selectedRegion} 
+          sites={this.state.sites} 
+          searchText={this.state.resultText} 
+          targetCurrency={this.state.targetCurrency}
+          exchangeRates={this.state.exchangeRates}
+          results={this.state.results} 
+        />
         <Footer 
           serverVersion={this.state.serverVersion} 
           onShowSiteList={(e) => this.onShowSiteList(e)}
@@ -268,6 +323,41 @@ class SearchArea extends React.Component {
           onSubmit={(e) => this.props.onSubmit(e)}
           onChange={(e) => this.props.onChange(e)}
         />
+        <CurrencySelectors 
+          targetCurrency={this.props.targetCurrency}
+          onTargetCurrencyChange={(e) => this.props.onTargetCurrencyChange(e)}
+        />
+      </div>
+    )
+  }
+}
+
+class CurrencySelectors extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    let renderCurrencyButtons = () => {
+      return ['USD', 'EUR', 'GBP', 'CAD', 'AUD'].map((curr) => {
+        let classes = ["CurrencyButton"];
+        if (this.props.targetCurrency == curr) {
+          classes.push("SelectedCurrencyButton");
+        }
+        return (
+          <button 
+            key={curr} 
+            className={classes.join(' ')}
+            onClick={() => this.props.onTargetCurrencyChange(curr)}
+          >
+            {curr}
+          </button>
+        )
+      });
+    };
+    return (
+      <div>
+        {renderCurrencyButtons()}
       </div>
     )
   }
@@ -458,24 +548,64 @@ class ResultsArea extends React.Component {
     })
   }
 
+  currencySymbolToCode(symbol) {
+    switch (symbol) {
+      case "$": return 'USD';
+      case "€": return 'EUR';
+      case "£": return 'GBP';
+      case "A$": return 'AUD';
+      default: return symbol;
+    }
+  }
+
+  currencyCodeToSymbol(code) {
+    switch (code) {
+      case "USD": return '$';
+      case "EUR": return '€';
+      case "GBP": return '£';
+      case "AUD": return 'A$';
+      default: return code;
+    }
+  }
+
+  convertToTargetCurrency(item) {
+    let rates = this.props.exchangeRates[this.props.targetCurrency];
+    if (rates) {
+      let itemCurrency = this.currencySymbolToCode(item.currency);
+
+      rates[this.props.targetCurrency] = 1;
+
+      return (item.price * (1/rates[itemCurrency])).toFixed(2);
+    }
+  }
+
   renderItems(items, itemClass = "ResultItem") {
     let results = null;
     if (items) {
-      results = items.map((item) => {
-        if (this.isItemInRegion(item)) {
+      results = items
+        .filter((item) => this.isItemInRegion(item))
+        .map((item) => {
+          let new_item = {...item};
+          if (this.props.targetCurrency) {
+            new_item.price = this.convertToTargetCurrency(item);
+            new_item.currency = this.currencyCodeToSymbol(this.props.targetCurrency);
+          }
+          return new_item;
+        })
+        .sort((a, b) => a.price - b.price)
+        .map((item) => {
           let siteName = this.siteFromURL(item.site);
           return (
-            <div key={item.url} className={itemClass}>
-              <a className="DeckLink" href={item.url} target="_blank" onClick={(e) => this.onLinkClick({item})}>
-                <img className="Thumbnail" src={item.image_url} />
-                <p className="DeckName">{item.deck_name}</p>
-                <p className="DeckPrice">{item.currency}{item.price}</p>
-                <p className="SiteUrl">{siteName}</p>
-              </a>
-            </div>
-          )
-        }
-      });
+              <div key={item.url} className={itemClass}>
+                <a className="DeckLink" href={item.url} target="_blank" onClick={(e) => this.onLinkClick({item})}>
+                  <img className="Thumbnail" src={item.image_url} />
+                  <p className="DeckName">{item.deck_name}</p>
+                  <p className="DeckPrice">{item.currency} {item.price}</p>
+                  <p className="SiteUrl">{siteName}</p>
+                </a>
+              </div>
+            )
+        });
     }
 
     return results;
@@ -537,7 +667,7 @@ class Footer extends React.Component {
           <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=284756&theme=light" alt="find-cards - Find the playing cards you want at the best price | Product Hunt" style={{width: "180px", height: "auto", display: "block", position: "static"}}/>
         </a>
         </center>
-        <div style={{"margin-top": "10px"}}>
+        <div style={{"marginTop": "10px"}}>
           <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> | <a className="FooterLink" href="" onClick={(e) => this.props.onShowSiteList(e)}>Supported Sites</a><br />
           {this.props.serverVersion ? `v${this.props.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo designed by <a className="FooterLink" href="https://www.behance.net/melvinmercier">Melvin Mercier</a>
         </div>

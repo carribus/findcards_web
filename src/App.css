@@ -85,9 +85,23 @@ ul > li {
 }
 
 .SearchArea {
-  margin-top: 25px;
+  margin-top: 15px;
   display: flex;
   flex-direction: column;
+}
+
+.CurrencyButton, .CurrencyButton:focus {
+  height: 25px;
+  margin-top: 15px;
+  margin-right: 5px;
+  border-radius: 5px;
+  outline: none;
+}
+
+.SelectedCurrencyButton {
+  background-color: rgb(51, 51, 51);
+  color: white;
+  border: 2px greenyellow solid;
 }
 
 .FormContainer {
@@ -181,7 +195,7 @@ input[type="text"].SearchField {
 
 
 .ResultsArea {
-  min-height: 72vh;
+  min-height: 70vh;
 }
 
 .Results {
