@@ -136,6 +136,18 @@ input[type="text"].SearchField {
   justify-content: center;
 }
 
+.Notice {
+  font-size: 16px;
+  font-weight: bold;
+  color:rgb(56, 124, 212);
+}
+
+.Notice > a, .Notice > a:hover, .Notice > a:visited {
+  font-size: 16px;
+  font-weight: bold;
+  color:rgb(56, 124, 212);
+}
+
 .TagLine {
   font-size: 16px;
   color: rgb(167, 167, 167);
@@ -169,7 +181,7 @@ input[type="text"].SearchField {
 
 
 .ResultsArea {
-  min-height: 73vh;
+  min-height: 72vh;
 }
 
 .Results {

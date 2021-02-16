@@ -537,7 +537,7 @@ class Footer extends React.Component {
           <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=284756&theme=light" alt="find-cards - Find the playing cards you want at the best price | Product Hunt" style={{width: "180px", height: "auto", display: "block", position: "static"}}/>
         </a>
         </center>
-        <div>
+        <div style={{"margin-top": "10px"}}>
           <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> | <a className="FooterLink" href="" onClick={(e) => this.props.onShowSiteList(e)}>Supported Sites</a><br />
           {this.props.serverVersion ? `v${this.props.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo designed by <a className="FooterLink" href="https://www.behance.net/melvinmercier">Melvin Mercier</a>
         </div>
