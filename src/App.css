@@ -99,6 +99,7 @@ ul > li {
   margin-top: 15px;
   margin-right: 5px;
   border-radius: 5px;
+  background-color: lightgray;
   outline: none;
 }
 
