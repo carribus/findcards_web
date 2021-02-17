@@ -371,7 +371,11 @@ input[type="text"].SearchField {
   }
 
   .SiteList {
-    font-size: 12px;
+    font-size: 14px;
+  }
+
+  .ScrollablePanel {
+    height: 85%;
   }
 }
 

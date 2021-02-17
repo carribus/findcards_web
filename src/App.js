@@ -602,7 +602,7 @@ class ResultsArea extends React.Component {
           let siteName = this.siteFromURL(item.site);
           return (
               <div key={item.url} className={itemClass}>
-                <a className="DeckLink" href={item.url} target="_blank" onClick={(e) => this.onLinkClick({item})}>
+                <a className="DeckLink" href={item.url+"?referrer=findcards"} target="_blank" onClick={(e) => this.onLinkClick({item})}>
                   <img className="Thumbnail" src={item.image_url} />
                   <p className="DeckName">{item.deck_name}</p>
                   <p className="DeckPrice">{item.currency} {item.price}</p>
