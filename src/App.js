@@ -15,6 +15,7 @@ const API_POPULAR_SEARCHES = `${PROTOCOL}://${HOST}/search/popular?limit=`;
 const API_RECENT_SEARCHES = `${PROTOCOL}://${HOST}/search/recent?limit=`;
 const API_STATS = `${PROTOCOL}://${HOST}/stats`;
 const API_EVENT_POST = `${PROTOCOL}://${HOST}/data/event`
+const API_AFFILIATE_PRODUCTS = `${PROTOCOL}://${HOST}/aff/products`;
 
 // CURRENCY API
 const API_EXCHANGE_RATES = "https://api.exchangeratesapi.io";
@@ -103,23 +104,23 @@ class App extends React.Component {
 
   fetchCurrencyPairs(baseCurrency) {
     let today = new Date();
-    let url = `${API_EXCHANGE_RATES}/${today.getFullYear()}-${today.getUTCMonth()+1}-${today.getUTCDate()}?base=${baseCurrency}`
+    let url = `${API_EXCHANGE_RATES}/${today.getFullYear()}-${today.getUTCMonth() + 1}-${today.getUTCDate()}?base=${baseCurrency}`
 
     // make sure that we don't refetch exchange rates that we already have
     if (!this.state.exchangeRates[baseCurrency]) {
-      let er = {...this.state.exchangeRates};
+      let er = { ...this.state.exchangeRates };
 
       fetch(url)
-      .then(res => res.json())
-      .then((data) => {
-        er[baseCurrency] = data.rates;
-        this.setState({
-          exchangeRates: er,
+        .then(res => res.json())
+        .then((data) => {
+          er[baseCurrency] = data.rates;
+          this.setState({
+            exchangeRates: er,
+          })
         })
-      })
-      .catch((e) => {
-        console.error(e);
-      })
+        .catch((e) => {
+          console.error(e);
+        })
     }
   }
 
@@ -168,7 +169,7 @@ class App extends React.Component {
             deck.price = deck.price.replace(",", ".");
             return deck;
           })
-          .filter(deck => deck.available === true)
+            .filter(deck => deck.available === true)
         })
       })
       .catch((e) => {
@@ -207,8 +208,8 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <SiteList 
-          sites={this.state.sites} 
+        <SiteList
+          sites={this.state.sites}
           visible={this.state.sites_visible}
           onClose={(e) => this.onShowSiteList(e)} />
         <Header />
@@ -220,21 +221,21 @@ class App extends React.Component {
           onTargetCurrencyChange={(e) => this.handleTargetCurrencyChange(e)}
           onChange={(e) => this.handleSearchChange(e)}
           onSubmit={(e) => this.handleSearchSubmit(e)} />
-        <FilterArea 
-          regions={this.state.regions} 
-          onChange={(e) => this.handleFilterPopularSearchesChange(e)} 
+        <FilterArea
+          regions={this.state.regions}
+          onChange={(e) => this.handleFilterPopularSearchesChange(e)}
           onRegionChange={(e) => this.handleRegionChange(e)}
         />
-        <ResultsArea 
-          region={this.state.selectedRegion} 
-          sites={this.state.sites} 
-          searchText={this.state.resultText} 
+        <ResultsArea
+          region={this.state.selectedRegion}
+          sites={this.state.sites}
+          searchText={this.state.resultText}
           targetCurrency={this.state.targetCurrency}
           exchangeRates={this.state.exchangeRates}
-          results={this.state.results} 
+          results={this.state.results}
         />
-        <Footer 
-          serverVersion={this.state.serverVersion} 
+        <Footer
+          serverVersion={this.state.serverVersion}
           onShowSiteList={(e) => this.onShowSiteList(e)}
         />
       </div>
@@ -269,18 +270,18 @@ class SiteList extends React.Component {
   render() {
     let width = window.innerWidth * 0.6;
     let height = window.innerHeight * 0.6;
-    let top = window.innerHeight/2 - height/2 + this.state.yOffset;
+    let top = window.innerHeight / 2 - height / 2 + this.state.yOffset;
     let left = 50 + '%';
-    let marginLeft = -width/2;
+    let marginLeft = -width / 2;
     let display = this.props.visible ? "block" : "none";
 
     return (
-      <div className="SiteList" style={{display, width, height, top, left, marginLeft, position: 'absolute'}}>
+      <div className="SiteList" style={{ display, width, height, top, left, marginLeft, position: 'absolute' }}>
         <div>
-          <button onClick={(e) => this.props.onClose(e)}className="CloseButton">X</button>
+          <button onClick={(e) => this.props.onClose(e)} className="CloseButton">X</button>
         </div>
         <p>
-          The following {this.props.sites.length} online stores are currently supported by find-cards.com.<br/> 
+          The following {this.props.sites.length} online stores are currently supported by find-cards.com.<br />
           If you would like a site added, <a href="mailto:peter@find-cards.com">send us a mail</a>
         </p>
         <div className="ScrollablePanel">
@@ -328,7 +329,7 @@ class SearchArea extends React.Component {
           onSubmit={(e) => this.props.onSubmit(e)}
           onChange={(e) => this.props.onChange(e)}
         />
-        <CurrencySelectors 
+        <CurrencySelectors
           targetCurrency={this.props.targetCurrency}
           onTargetCurrencyChange={(e) => this.props.onTargetCurrencyChange(e)}
         />
@@ -350,8 +351,8 @@ class CurrencySelectors extends React.Component {
           classes.push("SelectedCurrencyButton");
         }
         return (
-          <button 
-            key={curr} 
+          <button
+            key={curr}
             className={classes.join(' ')}
             onClick={() => this.props.onTargetCurrencyChange(curr)}
           >
@@ -580,7 +581,7 @@ class ResultsArea extends React.Component {
 
       rates[this.props.targetCurrency] = 1;
 
-      return (item.price * (1/rates[itemCurrency])).toFixed(2);
+      return (item.price * (1 / rates[itemCurrency])).toFixed(2);
     }
   }
 
@@ -590,7 +591,7 @@ class ResultsArea extends React.Component {
       results = items
         .filter((item) => this.isItemInRegion(item))
         .map((item) => {
-          let new_item = {...item};
+          let new_item = { ...item };
           if (this.props.targetCurrency) {
             new_item.price = this.convertToTargetCurrency(item);
             new_item.currency = this.currencyCodeToSymbol(this.props.targetCurrency);
@@ -601,15 +602,15 @@ class ResultsArea extends React.Component {
         .map((item) => {
           let siteName = this.siteFromURL(item.site);
           return (
-              <div key={item.url} className={itemClass}>
-                <a className="DeckLink" href={item.url+"?referrer=findcards"} target="_blank" onClick={(e) => this.onLinkClick({item})}>
-                  <img className="Thumbnail" src={item.image_url} />
-                  <p className="DeckName">{item.deck_name}</p>
-                  <p className="DeckPrice">{item.currency} {item.price}</p>
-                  <p className="SiteUrl">{siteName}</p>
-                </a>
-              </div>
-            )
+            <div key={item.url} className={itemClass}>
+              <a className="DeckLink" href={item.url + "?referrer=findcards"} target="_blank" onClick={(e) => this.onLinkClick({ item })}>
+                <img className="Thumbnail" src={item.image_url} />
+                <p className="DeckName">{item.deck_name}</p>
+                <p className="DeckPrice">{item.currency} {item.price}</p>
+                <p className="SiteUrl">{siteName}</p>
+              </a>
+            </div>
+          )
         });
     }
 
@@ -634,9 +635,9 @@ class ResultsArea extends React.Component {
       labelResults = results.length > 0
         ? <p className="ResultLabel">Showing {formatNumber(results.length)} matches for &quot;{this.props.searchText}&quot; {this.renderSelectedRegion()}</p>
         : <p className="ResultLabel">No results for &quot;{this.props.searchText}&quot;</p>
-      labelSuggestions = suggestions.length > 0 
+      labelSuggestions = suggestions.length > 0
         ? <p className="SuggestionLabel">Showing {formatNumber(suggestions.length)} alternative suggestions {this.renderSelectedRegion()}</p>
-        : <p/>
+        : <p />
     } else {
       labelResults = <p />
     }
@@ -650,12 +651,81 @@ class ResultsArea extends React.Component {
         <div className="Results">
           {items}
         </div>
+        <AmazonProductBar />
         {labelSuggestions}
         <div className="Results">
           {suggested_items}
         </div>
       </div>
     )
+  }
+}
+
+class AmazonProductBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      productList: [],
+    }
+  }
+
+  componentDidMount() {
+    fetch(API_AFFILIATE_PRODUCTS)
+      .then(res => res.json())
+      .then((data) => {
+        this.setState({
+          productList: data.products,
+        });
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }
+
+  renderProductLinks() {
+    if (this.state.productList.length > 0) {
+      let links = this.state.productList.slice();
+      let itemWidth = 120, itemHeight = 240;
+      let windowWidth = window.innerWidth;
+      let itemCount = Math.floor(windowWidth / itemWidth)-1;
+      let product_links = [];
+  
+      for (let i = 0; i < Math.min(7, itemCount); i++) {
+        let count = links.length;
+        let index = Math.floor(Math.random()*count);
+        let item = links.splice(index, 1)[0];
+        console.log(item.link);
+        product_links.push(
+          <iframe key={item.link}
+            style={{ width: itemWidth+"px", height: itemHeight + "px" }}
+            marginWidth="0"
+            marginHeight="0"
+            scrolling="no"
+            frameBorder="0"
+            src={item.link}>
+          </iframe>
+        )
+      }
+  
+      return product_links;
+    } else {
+      return <div></div>  
+    }
+  }
+
+  render() {
+    let productLinks = this.renderProductLinks();
+
+    if (productLinks.length > 0) {
+      return (
+        <div className="AmazonProducts">
+          <p>Other suggestions on Amazon</p>
+          {productLinks.map(item => item)}
+        </div>
+      )
+    } else {
+      return <div></div>
+    }
   }
 }
 
@@ -668,11 +738,11 @@ class Footer extends React.Component {
     return (
       <footer className="App-footer">
         <center>
-        <a href="https://www.producthunt.com/posts/find-cards?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-find-cards" target="_blank">
-          <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=284756&theme=light" alt="find-cards - Find the playing cards you want at the best price | Product Hunt" style={{width: "180px", height: "auto", display: "block", position: "static"}}/>
-        </a>
+          <a href="https://www.producthunt.com/posts/find-cards?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-find-cards" target="_blank">
+            <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=284756&theme=light" alt="find-cards - Find the playing cards you want at the best price | Product Hunt" style={{ width: "180px", height: "auto", display: "block", position: "static" }} />
+          </a>
         </center>
-        <div style={{"marginTop": "10px"}}>
+        <div style={{ "marginTop": "10px" }}>
           <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> | <a className="FooterLink" href="" onClick={(e) => this.props.onShowSiteList(e)}>Supported Sites</a><br />
           {this.props.serverVersion ? `v${this.props.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo designed by <a className="FooterLink" href="https://www.behance.net/melvinmercier">Melvin Mercier</a>
         </div>

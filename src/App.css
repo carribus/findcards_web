@@ -217,7 +217,7 @@ input[type="text"].SearchField {
 }
 
 .SuggestionLabel {
-  margin-top: 50px;
+  margin-top: 25px;
   font-size: 18px;
   color: white;
   font-style: italic;
@@ -309,6 +309,12 @@ input[type="text"].SearchField {
   color: white;
   text-decoration: none;
   margin-top: 20px;
+}
+
+.AmazonProducts {
+  margin-top: 10px;
+  color: white;
+  font-style: italic;
 }
 
 .FooterLink, .FooterLink:visited, .NavFooterLinkLink:active {
