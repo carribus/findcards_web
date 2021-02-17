@@ -2,6 +2,10 @@ body {
   background-color: #292c31;
 }
 
+.Hidden {
+  display: none;
+}
+
 .App {
   text-align: center;
   display: flex;
