@@ -721,6 +721,7 @@ class AmazonProductBar extends React.Component {
         <div className="AmazonProducts">
           <p>Other suggestions on Amazon</p>
           {productLinks.map(item => item)}
+          <p className="BlurbSmall">As an Amazon Associate I earn from qualifying purchases.</p>
         </div>
       )
     } else {
