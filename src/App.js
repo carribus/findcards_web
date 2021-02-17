@@ -2,12 +2,13 @@ import logo from './fc-logo-256x256.png';
 import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import userEvent from '@testing-library/user-event';
 
-const HOST = "find-cards.com/api";
-const PROTOCOL = "https";
+// const HOST = "find-cards.com/api";
+// const PROTOCOL = "https";
 
-// const HOST = "localhost:8000";
-// const PROTOCOL = "http";
+const HOST = "localhost:8000";
+const PROTOCOL = "http";
 
 // API Endpoints
 const API_SEARCH = `${PROTOCOL}://${HOST}/search?key=`;
@@ -19,6 +20,9 @@ const API_AFFILIATE_PRODUCTS = `${PROTOCOL}://${HOST}/aff/products`;
 
 // CURRENCY API
 const API_EXCHANGE_RATES = "https://api.exchangeratesapi.io";
+
+// GEO IP LOCATION API
+const API_GEOIP = "https://extreme-ip-lookup.com/json"
 
 function formatNumber(num) {
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
@@ -40,6 +44,11 @@ class App extends React.Component {
       regions: [],
       exchangeRates: {},
       targetCurrency: null,
+      geoData: {
+        countryCode: null,
+        continent: null,
+        region: null,
+      },
     }
   }
 
@@ -85,6 +94,18 @@ class App extends React.Component {
       .catch((e) => {
         console.error(e);
       })
+
+      fetch(API_GEOIP)
+        .then(res => res.json())
+        .then((data) => {
+          this.setState({
+            geoData: {
+              countryCode: data.countryCode,
+              continent: data.continent,
+              region: data.region,
+            }
+          })
+        })
   }
 
   handleTargetCurrencyChange(curr) {
@@ -227,6 +248,7 @@ class App extends React.Component {
           onRegionChange={(e) => this.handleRegionChange(e)}
         />
         <ResultsArea
+          geoData={this.state.geoData}
           region={this.state.selectedRegion}
           sites={this.state.sites}
           searchText={this.state.resultText}
@@ -651,7 +673,7 @@ class ResultsArea extends React.Component {
         <div className="Results">
           {items}
         </div>
-        <AmazonProductBar />
+        <AmazonProductBar geoData={this.props.geoData}/>
         {labelSuggestions}
         <div className="Results">
           {suggested_items}
@@ -684,7 +706,24 @@ class AmazonProductBar extends React.Component {
 
   renderProductLinks() {
     if (this.state.productList.length > 0) {
-      let links = this.state.productList.slice();
+      let links = this.state.productList.slice().filter((product) => {
+        let result = false;
+        switch (this.props.geoData.countryCode) {
+          case "GB": {
+            result = product.country == 'UK'; 
+            break;
+          }
+          case "US": {
+            result = product.country == 'US'; 
+            break;
+          }
+          default: {
+            result = product.country == 'US'; 
+            break;
+          }
+        }
+        return result;
+      });
       let itemWidth = 120, itemHeight = 240;
       let windowWidth = window.innerWidth;
       let itemCount = Math.floor(windowWidth / itemWidth)-1;
@@ -694,7 +733,6 @@ class AmazonProductBar extends React.Component {
         let count = links.length;
         let index = Math.floor(Math.random()*count);
         let item = links.splice(index, 1)[0];
-        console.log(item.link);
         product_links.push(
           <iframe key={item.link}
             style={{ width: itemWidth+"px", height: itemHeight + "px" }}
