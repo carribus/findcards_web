@@ -377,7 +377,7 @@ class SearchForm extends React.Component {
     return (
       <form onSubmit={(e) => this.props.onSubmit(e)}>
         <div className="FormContainer">
-          <p className="TagLine">Over <b>{formatNumber(this.props.deckCount - (this.props.deckCount % 1000))}</b> decks indexed across <b>{this.props.siteCount}</b> vendors</p>
+          <p className="TagLine">Over <b>{formatNumber(this.props.deckCount - (this.props.deckCount % 1000))}</b> decks indexed across <b>{this.props.siteCount}</b> shops</p>
           <input
             className="SearchField"
             name="searchfield"
