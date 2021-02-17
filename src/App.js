@@ -713,10 +713,6 @@ class AmazonProductBar extends React.Component {
             result = product.country == 'UK'; 
             break;
           }
-          case "US": {
-            result = product.country == 'US'; 
-            break;
-          }
           default: {
             result = product.country == 'US'; 
             break;
