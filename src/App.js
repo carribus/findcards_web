@@ -229,6 +229,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
+        <h1 class="Hidden">find-cards.com: Find Playing Cards at the best prices from dozens of different online stores</h1>
         <SiteList
           sites={this.state.sites}
           visible={this.state.sites_visible}
@@ -688,6 +689,7 @@ class AmazonProductBar extends React.Component {
     super(props);
     this.state = {
       productList: [],
+      displayedProducts: [],
     }
   }
 
@@ -697,6 +699,7 @@ class AmazonProductBar extends React.Component {
       .then((data) => {
         this.setState({
           productList: data.products,
+          displayedProducts: [],
         });
       })
       .catch((e) => {
@@ -705,46 +708,54 @@ class AmazonProductBar extends React.Component {
   }
 
   renderProductLinks() {
-    if (this.state.productList.length > 0) {
-      let links = this.state.productList.slice().filter((product) => {
-        let result = false;
-        switch (this.props.geoData.countryCode) {
-          case "GB": {
-            result = product.country == 'UK'; 
-            break;
+    if (this.state.displayedProducts.length == 0) {
+      if (this.state.productList.length > 0 ) {
+        let links = this.state.productList.slice().filter((product) => {
+          let result = false;
+          switch (this.props.geoData.countryCode) {
+            case "GB": {
+              result = product.country == 'UK'; 
+              break;
+            }
+            default: {
+              result = product.country == 'US'; 
+              break;
+            }
           }
-          default: {
-            result = product.country == 'US'; 
-            break;
-          }
+          return result;
+        });
+        let itemWidth = 120, itemHeight = 240;
+        let windowWidth = window.innerWidth;
+        let itemCount = Math.floor(windowWidth / itemWidth)-1;
+        let product_links = [];
+    
+        for (let i = 0; i < Math.min(7, itemCount); i++) {
+          let count = links.length;
+          let index = Math.floor(Math.random()*count);
+          let item = links.splice(index, 1)[0];
+          product_links.push(
+            <iframe key={item.link}
+              style={{ width: itemWidth+"px", height: itemHeight + "px" }}
+              marginWidth="0"
+              marginHeight="0"
+              scrolling="no"
+              frameBorder="0"
+              src={item.link}>
+            </iframe>
+          )
         }
-        return result;
-      });
-      let itemWidth = 120, itemHeight = 240;
-      let windowWidth = window.innerWidth;
-      let itemCount = Math.floor(windowWidth / itemWidth)-1;
-      let product_links = [];
-  
-      for (let i = 0; i < Math.min(7, itemCount); i++) {
-        let count = links.length;
-        let index = Math.floor(Math.random()*count);
-        let item = links.splice(index, 1)[0];
-        product_links.push(
-          <iframe key={item.link}
-            style={{ width: itemWidth+"px", height: itemHeight + "px" }}
-            marginWidth="0"
-            marginHeight="0"
-            scrolling="no"
-            frameBorder="0"
-            src={item.link}>
-          </iframe>
-        )
+
+        this.setState({
+          displayedProducts: product_links,
+        });
+        return product_links;
+      } else {
+        return <div></div>  
       }
-  
-      return product_links;
     } else {
-      return <div></div>  
+      return this.state.displayedProducts;
     }
+  
   }
 
   render() {

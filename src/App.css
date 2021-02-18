@@ -4,6 +4,7 @@ body {
 
 .Hidden {
   display: none;
+  visibility: hidden;
 }
 
 .App {
