@@ -4,11 +4,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import userEvent from '@testing-library/user-event';
 
-const HOST = "find-cards.com/api";
-const PROTOCOL = "https";
+// const HOST = "find-cards.com/api";
+// const PROTOCOL = "https";
 
-// const HOST = "localhost:8000";
-// const PROTOCOL = "http";
+const HOST = "localhost:8000";
+const PROTOCOL = "http";
 
 // API Endpoints
 const API_SEARCH = `${PROTOCOL}://${HOST}/search?key=`;
@@ -632,7 +632,7 @@ class ResultsArea extends React.Component {
               <a className="DeckLink" href={item.url} target="_blank" onClick={(e) => this.onLinkClick({ item })}>
                 <img className="Thumbnail" src={item.image_url} />
                 <p className="DeckName">{item.deck_name}</p>
-                <p className="DeckPrice">{item.currency} {item.price}</p>
+                <p className="DeckPrice">{item.currency == "Days" ? "Days left: " : item.currency} {item.price}</p>
                 <p className="SiteUrl">{siteName}</p>
               </a>
             </div>
