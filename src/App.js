@@ -559,7 +559,10 @@ class ResultsArea extends React.Component {
   onLinkClick(item) {
     let event = {
       event_type: 'product_click',
-      data: item,
+      data: {
+        item: item.item,
+        search_text: this.props.searchText,
+      }
     };
 
     fetch(API_EVENT_POST, {
