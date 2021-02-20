@@ -7,8 +7,10 @@
   <link rel="canonical" href="https://find-cards.com" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <meta name="theme-color" content="#000000" />
-  <meta name="description" content="Playing Card and deck finder. Helps card collectors, magicians and cardists find the playing cards they want at the best possible prices" />
-  <meta name="keywords" content="Playing Cards, deck of cards, cardistry, cardistry decks, cardistry cards, card collecting, card collectors ollectors, Cards, Decks, 52 cards">
+  <meta name="description"
+    content="Playing Card and deck finder. Helps card collectors, magicians and cardists find the playing cards they want at the best possible prices" />
+  <meta name="keywords"
+    content="Playing Cards, deck of cards, cardistry, cardistry decks, cardistry cards, card collecting, card collectors ollectors, Cards, Decks, 52 cards">
   <link rel="apple-touch-icon" href="%PUBLIC_URL%/fc-logo-256x256.png" />
   <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -33,6 +35,18 @@
 
     gtag('config', 'G-JHEBE8D4TY');
   </script>
+  <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "https://find-cards.com/",
+        "potentialAction": [{
+          "@type": "SearchAction",
+          "target": "https://find-cards.com/api/search?key={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }]
+      }
+      </script>
 </head>
 
 <body>
