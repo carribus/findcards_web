@@ -371,7 +371,11 @@ class CurrencySelectors extends React.Component {
       return ['USD', 'EUR', 'GBP', 'CAD', 'AUD'].map((curr) => {
         let classes = ["CurrencyButton"];
         if (this.props.targetCurrency == curr) {
+          classes.pop();
           classes.push("SelectedCurrencyButton");
+        } else {
+          classes.pop();
+          classes.push("CurrencyButton");
         }
         return (
           <button
@@ -619,7 +623,7 @@ class ResultsArea extends React.Component {
         .filter((item) => this.isItemInRegion(item))
         .map((item) => {
           let new_item = { ...item };
-          if (this.props.targetCurrency) {
+          if (new_item.site != 'https://www.kickstarter.com' && this.props.targetCurrency) {
             new_item.price = this.convertToTargetCurrency(item);
             new_item.currency = this.currencyCodeToSymbol(this.props.targetCurrency);
           }
