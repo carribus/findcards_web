@@ -93,6 +93,7 @@ ul > li {
   font-size: 32px;
   color: white;
   vertical-align: bottom;
+  text-decoration: none;
 }
 
 .SearchArea {

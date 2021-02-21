@@ -341,7 +341,7 @@ class Header extends React.Component {
           <a href="/">
             <img className="Logo" src={logo} alt="find-cards logo" />
           </a>
-          <p className="LogoText">find-cards.com</p>
+          <a href="/" className="LogoText">find-cards.com</a>
         </div>
         <div className="HeaderBlurb">
           <h1 className="Blurb">Find playing cards at the best possible prices!</h1>
