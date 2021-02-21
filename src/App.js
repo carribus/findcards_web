@@ -419,7 +419,7 @@ class SearchForm extends React.Component {
     return (
       <form onSubmit={(e) => this.props.onSubmit(e)}>
         <div className="FormContainer">
-        <p className="TagLine">Over <b>{formatNumber(this.props.deckCount - (this.props.deckCount % 1000))}</b> decks indexed across <b>{this.props.siteCount}</b> shops</p>
+        <p className="TagLine">Over <b>{formatNumber(this.props.deckCount - (this.props.deckCount % 1000))}</b> available decks indexed across <b>{this.props.siteCount}</b> shops</p>
         <p className="TagLine"><img width="120px" src="https://ksr-static.imgix.net/tq0sfld-kickstarter-logo-green.png?ixlib=rb-2.1.0&s=0cce952d7b55823ff451a58887a0c578" alt="Kickstarter logo"></img> campaigns are now supported as well (Search for 'kickstarter')</p>
           <input
             className="SearchField"
