@@ -106,6 +106,18 @@ class App extends React.Component {
             }
           })
         })
+
+    // fetch any query parameters that should be sent through for search
+    // and do the search
+    let params = new URLSearchParams(window.location.search);
+    let key = params.get('key');
+    if (key && key.length > 0) {
+      this.setState({
+        searchText: key,
+      }, () => {
+        this.submitSearch();
+      })
+    }
   }
 
   handleTargetCurrencyChange(curr) {
@@ -229,7 +241,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <h1 class="Hidden">find-cards.com: Find Playing Cards at the best prices from dozens of different online stores</h1>
+        <h1 className="Hidden">find-cards.com: Find Playing Cards at the best prices from dozens of different online stores</h1>
         <SiteList
           sites={this.state.sites}
           visible={this.state.sites_visible}
@@ -326,7 +338,9 @@ class Header extends React.Component {
     return (
       <div className="HeaderBar">
         <div className="HeaderBrand">
-          <img className="Logo" src={logo} alt="find-cards logo" />
+          <a href="/">
+            <img className="Logo" src={logo} alt="find-cards logo" />
+          </a>
           <p className="LogoText">find-cards.com</p>
         </div>
         <div className="HeaderBlurb">
