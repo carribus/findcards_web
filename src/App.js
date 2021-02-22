@@ -194,6 +194,10 @@ class App extends React.Component {
           if (ap < bp) return -1;
           if (ap > bp) return 1;
 
+          // then by name
+          if (a.label < b.label) return -1;
+          if (a.label > b.label) return 1;
+
           return 0;
         });
         this.setState({
@@ -643,7 +647,22 @@ class ResultsArea extends React.Component {
           }
           return new_item;
         })
-        .sort((a, b) => a.price - b.price)
+        .sort((a, b) => {
+          let ap = parseFloat(a.price);
+          let bp = parseFloat(b.price);
+
+          // sort by relevance first
+          if (a.relevance > b.relevance) return -1;
+          if (a.relevance < b.relevance) return 1;
+
+          // then by price
+          if (ap < bp) return -1;
+          if (ap > bp) return 1;
+
+          // then by name
+          if (a.site < b.site) return -1;
+          if (a.site > b.site) return 1;          
+        })
         .map((item) => {
           let siteName = this.siteFromURL(item.site);
           return (
