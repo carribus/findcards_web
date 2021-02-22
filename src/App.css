@@ -221,6 +221,7 @@ input[type="text"].SearchField {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 15px;
 }
 
 .ResultLabel {
