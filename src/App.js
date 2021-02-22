@@ -696,7 +696,8 @@ class ResultsArea extends React.Component {
         <div className="Results">
           {items}
         </div>
-        <AmazonProductBar geoData={this.props.geoData}/>
+        {/* <AmazonProductBar geoData={this.props.geoData}/> */}
+        <a href="https://www.patreon.com/bePatron?u=51104947" data-patreon-widget-type="become-patron-button">Become a Patron!</a>
         {labelSuggestions}
         <div className="Results">
           {suggested_items}
