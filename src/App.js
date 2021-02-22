@@ -648,20 +648,7 @@ class ResultsArea extends React.Component {
           return new_item;
         })
         .sort((a, b) => {
-          let ap = parseFloat(a.price);
-          let bp = parseFloat(b.price);
-
-          // sort by relevance first
-          if (a.relevance > b.relevance) return -1;
-          if (a.relevance < b.relevance) return 1;
-
-          // then by price
-          if (ap < bp) return -1;
-          if (ap > bp) return 1;
-
-          // then by name
-          if (a.site < b.site) return -1;
-          if (a.site > b.site) return 1;          
+          a.price - b.price
         })
         .map((item) => {
           let siteName = this.siteFromURL(item.site);
