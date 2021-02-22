@@ -162,11 +162,13 @@ class App extends React.Component {
     this.setState({
       searchText: e.target.value,
     });
-    this.submitTimerId = setTimeout(() => {
-      clearTimeout(this.submitTimerId);
-      this.submitTimerId = null;
-      this.submitSearch();
-    }, 750)
+    if (e.target.value.trim().length >= 3) {
+      this.submitTimerId = setTimeout(() => {
+        clearTimeout(this.submitTimerId);
+        this.submitTimerId = null;
+        this.submitSearch();
+      }, 750)
+    }
   }
 
   submitSearch() {
