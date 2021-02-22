@@ -648,7 +648,7 @@ class ResultsArea extends React.Component {
           return new_item;
         })
         .sort((a, b) => {
-          a.price - b.price
+          return a.price - b.price
         })
         .map((item) => {
           let siteName = this.siteFromURL(item.site);
