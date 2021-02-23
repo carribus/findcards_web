@@ -446,7 +446,7 @@ class FilterArea extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchLimit: 10,
+      searchLimit: 20,
       popularSearches: [],
       recentSearches: [],
     }
@@ -524,7 +524,7 @@ class FilterArea extends React.Component {
     return (
       <div className="FilterArea">
         <select id="top_searches" className="DropdownFilter" defaultValue="--" onChange={(e) => this.props.onChange(e)}>
-          <option disabled value="--">Top 10 Searches</option>
+          <option disabled value="--">Top {this.state.searchLimit} Searches</option>
           {this.renderPopularSearchItems(this.state.searchLimit)}
         </select>
         <select id="recent_searches" className="DropdownFilter" defaultValue="--" onChange={(e) => this.props.onChange(e)}>
