@@ -98,11 +98,36 @@ class App extends React.Component {
       fetch(API_GEOIP)
         .then(res => res.json())
         .then((data) => {
+          let targetCurrency = 'USD';
+          switch (data.continent) {
+            case 'Europe':
+              if (data.countryCode == 'GB' || data.countrCode == 'GI') {
+                targetCurrency = 'GBP';
+              } else {
+                targetCurrency = 'EUR';
+              }
+              break;
+            case 'Oceania':
+              if (data.countryCode == 'AU') {
+                targetCurrency = 'AUD';
+              }
+              break;
+            case 'North America':
+              if (data.countryCode == 'CA') {
+                targetCurrency = 'CAD';
+              }
+              break;
+          }
           this.setState({
             geoData: {
               countryCode: data.countryCode,
               continent: data.continent,
               region: data.region,
+            },
+            targetCurrency,
+          }, () => {
+            if (this.state.targetCurrency) {
+              this.fetchCurrencyPairs(this.state.targetCurrency);
             }
           })
         })
