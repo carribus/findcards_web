@@ -260,6 +260,11 @@ input[type="text"].SearchField {
   transition: background-color 0.25s linear;
 }
 
+.PatreonBadge {
+  width: 150px;
+  height: auto;
+}
+
 .SuggestionItem {
   text-align: center;
   width: 175px;

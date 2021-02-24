@@ -1,4 +1,5 @@
 import logo from './fc-logo-256x256.png';
+import patreonlogo from "./PatreonWebsiteBadge.jpg";
 import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -730,7 +731,7 @@ class ResultsArea extends React.Component {
           {items}
         </div>
         {/* <AmazonProductBar geoData={this.props.geoData}/> */}
-        <a href="https://www.patreon.com/bePatron?u=51104947" data-patreon-widget-type="become-patron-button">Become a Patron!</a>
+        <a href="https://www.patreon.com/bePatron?u=51104947"><img className="PatreonBadge" src={patreonlogo} alt="Become a patron!"></img></a>
         {labelSuggestions}
         <div className="Results">
           {suggested_items}
