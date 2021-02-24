@@ -101,7 +101,7 @@ class App extends React.Component {
           let targetCurrency = 'USD';
           switch (data.continent) {
             case 'Europe':
-              if (data.countryCode == 'GB' || data.countrCode == 'GI') {
+              if (data.countryCode == 'GB' || data.countryCode == 'GI') {
                 targetCurrency = 'GBP';
               } else {
                 targetCurrency = 'EUR';
