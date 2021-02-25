@@ -637,6 +637,7 @@ class ResultsArea extends React.Component {
       case "€": return 'EUR';
       case "£": return 'GBP';
       case "A$": return 'AUD';
+      case "S$": return 'SGD';
       default: return symbol;
     }
   }
