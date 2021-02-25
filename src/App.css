@@ -128,8 +128,8 @@ ul > li {
 
 input[type="text"].SearchField {
   min-width: 300px;
-  height: 32px;
-  font-size: 16px;
+  height: 48px;
+  font-size: 18px;
   text-align: center;
   border: none;
   border-radius: 10px;
@@ -362,10 +362,6 @@ input[type="text"].SearchField {
     width: 220px;
   }
 
-  .SearchField {
-    font-size: 14px;
-  }  
-
   .SiteList {
     font-size: 12px;
   }
@@ -412,9 +408,5 @@ input[type="text"].SearchField {
   .Blurb {
     font-size: 18px;
   }
-  
-  .SearchField {
-    font-size: 24px;
-  }    
 }
 
