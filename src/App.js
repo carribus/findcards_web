@@ -18,6 +18,7 @@ const API_RECENT_SEARCHES = `${PROTOCOL}://${HOST}/search/recent?limit=`;
 const API_STATS = `${PROTOCOL}://${HOST}/stats`;
 const API_EVENT_POST = `${PROTOCOL}://${HOST}/data/event`
 const API_AFFILIATE_PRODUCTS = `${PROTOCOL}://${HOST}/aff/products`;
+const API_RELEASES_ON_DAY = `${PROTOCOL}://${HOST}/releases`;
 
 // CURRENCY API
 const API_EXCHANGE_RATES = "https://api.exchangeratesapi.io";
@@ -50,6 +51,9 @@ class App extends React.Component {
         continent: null,
         region: null,
       },
+      releaseDay: null,
+      releasedDecks: null,
+      releases_visible: false,
     }
   }
 
@@ -96,42 +100,42 @@ class App extends React.Component {
         console.error(e);
       })
 
-      fetch(API_GEOIP)
-        .then(res => res.json())
-        .then((data) => {
-          let targetCurrency = 'USD';
-          switch (data.continent) {
-            case 'Europe':
-              if (data.countryCode == 'GB' || data.countryCode == 'GI') {
-                targetCurrency = 'GBP';
-              } else {
-                targetCurrency = 'EUR';
-              }
-              break;
-            case 'Oceania':
-              if (data.countryCode == 'AU') {
-                targetCurrency = 'AUD';
-              }
-              break;
-            case 'North America':
-              if (data.countryCode == 'CA') {
-                targetCurrency = 'CAD';
-              }
-              break;
-          }
-          this.setState({
-            geoData: {
-              countryCode: data.countryCode,
-              continent: data.continent,
-              region: data.region,
-            },
-            targetCurrency,
-          }, () => {
-            if (this.state.targetCurrency) {
-              this.fetchCurrencyPairs(this.state.targetCurrency);
+    fetch(API_GEOIP)
+      .then(res => res.json())
+      .then((data) => {
+        let targetCurrency = 'USD';
+        switch (data.continent) {
+          case 'Europe':
+            if (data.countryCode == 'GB' || data.countryCode == 'GI') {
+              targetCurrency = 'GBP';
+            } else {
+              targetCurrency = 'EUR';
             }
-          })
+            break;
+          case 'Oceania':
+            if (data.countryCode == 'AU') {
+              targetCurrency = 'AUD';
+            }
+            break;
+          case 'North America':
+            if (data.countryCode == 'CA') {
+              targetCurrency = 'CAD';
+            }
+            break;
+        }
+        this.setState({
+          geoData: {
+            countryCode: data.countryCode,
+            continent: data.continent,
+            region: data.region,
+          },
+          targetCurrency,
+        }, () => {
+          if (this.state.targetCurrency) {
+            this.fetchCurrencyPairs(this.state.targetCurrency);
+          }
         })
+      })
 
     // fetch any query parameters that should be sent through for search
     // and do the search
@@ -262,12 +266,51 @@ class App extends React.Component {
   }
 
   onShowSiteList(e) {
-    console.log("Site List");
     let sites_visible = this.state.sites_visible;
     this.setState({
       sites_visible: !sites_visible,
     })
     e.preventDefault();
+  }
+
+  onReleasesClick(e) {
+    const MS_PER_DAY = 86400000;
+    this.setState({
+      releases_visible: false,
+    });
+    let day;
+    switch (e) {
+      case "today":
+        day = Date.now();
+        break;
+      case "yesterday":
+        day = Date.now() - MS_PER_DAY;
+    }
+
+    let url = `${API_RELEASES_ON_DAY}/${day - (day % MS_PER_DAY)}`;
+    fetch(url)
+        .then(res => res.json())
+        .then((data) => {
+          this.setState({
+            releasedDecks: data,
+            releaseDay: e,
+          }, () => {
+            this.onShowReleaseModal();
+          })
+        })
+        .catch((e) => {
+          console.error(e);
+        })
+  }
+
+  onShowReleaseModal(e) {
+    let releases_visible = this.state.releases_visible;
+    this.setState({
+      releases_visible: !releases_visible,
+    });
+    if (e) {
+      e.preventDefault();
+    }
   }
 
   render() {
@@ -278,7 +321,15 @@ class App extends React.Component {
           sites={this.state.sites}
           visible={this.state.sites_visible}
           onClose={(e) => this.onShowSiteList(e)} />
+        <ReleaseModal
+          releaseDay={this.state.releaseDay}
+          releasedDecks={this.state.releasedDecks}
+          visible={this.state.releases_visible}
+          onClick={(e) => this.onReleasesClick(e)}
+          onClose={(e) => this.onShowReleaseModal(e)}
+        />
         <Header />
+        <FeatureMenu onClick={(e) => this.onReleasesClick(e)}/>
         <SearchArea
           deckCount={this.state.deckCount}
           siteCount={this.state.siteCount}
@@ -310,7 +361,7 @@ class App extends React.Component {
   }
 }
 
-class SiteList extends React.Component {
+class Modal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -326,7 +377,45 @@ class SiteList extends React.Component {
     })
   }
 
-  renderSiteList() {
+  render(className = "Modal") {
+    let width = window.innerWidth * 0.6;
+    let height = window.innerHeight * 0.6;
+    let top = window.innerHeight / 2 - height / 2 + this.state.yOffset;
+    let left = 50 + '%';
+    let marginLeft = -width / 2;
+    let display = this.props.visible ? "block" : "none";
+    
+    return (
+      <div className={className} style={{ display, width, height, top, left, marginLeft, position: 'absolute' }}>
+        <div>
+          <button onClick={(e) => this.props.onClose(e)} className="CloseButton">X</button>
+        </div>
+          <b>
+            {this.renderHeader()}
+          </b>
+        <div className="ScrollablePanel" >
+          {this.renderData()}
+        </div>
+      </div>
+    )
+  }
+}
+
+class SiteList extends Modal {
+  constructor(props) {
+    super(props);
+  }
+
+  renderHeader() {
+    return (
+      <p>
+        The following {this.props.sites.length} online stores are currently supported by find-cards.com.<br />
+        If you would like a site added, <a href="mailto:peter@find-cards.com">send us a mail</a>
+      </p>
+    )
+  }
+
+  renderData() {
     return this.props.sites.map((site) => {
       return (
         <li key={site.label}><a href={site.url}>{site.label}</a></li>
@@ -335,29 +424,7 @@ class SiteList extends React.Component {
   }
 
   render() {
-    let width = window.innerWidth * 0.6;
-    let height = window.innerHeight * 0.6;
-    let top = window.innerHeight / 2 - height / 2 + this.state.yOffset;
-    let left = 50 + '%';
-    let marginLeft = -width / 2;
-    let display = this.props.visible ? "block" : "none";
-
-    return (
-      <div className="SiteList" style={{ display, width, height, top, left, marginLeft, position: 'absolute' }}>
-        <div>
-          <button onClick={(e) => this.props.onClose(e)} className="CloseButton">X</button>
-        </div>
-        <p>
-          The following {this.props.sites.length} online stores are currently supported by find-cards.com.<br />
-          If you would like a site added, <a href="mailto:peter@find-cards.com">send us a mail</a>
-        </p>
-        <div className="ScrollablePanel">
-          <ul>
-            {this.renderSiteList()}
-          </ul>
-        </div>
-      </div>
-    )
+    return super.render();
   }
 }
 
@@ -380,6 +447,53 @@ class Header extends React.Component {
         </div>
       </div>
     )
+  }
+}
+
+class FeatureMenu extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <nav className="FeatureMenu">
+        <div className="FeatureItem" onClick={() => this.props.onClick("today")}>Today's decks</div>
+        <div className="FeatureItem" onClick={() => this.props.onClick("yesterday")}>Yesteday's decks</div>
+      </nav>
+    )
+  }
+}
+
+class ReleaseModal extends Modal {
+  constructor(props) {
+    super(props);
+  }
+
+  renderHeader() {
+    return (
+      <p>
+        These decks were added {this.props.releaseDay}
+      </p>
+    )
+  }
+
+  renderData() {
+    let results = [];
+    for (let site in this.props.releasedDecks) {
+      let decks = this.props.releasedDecks[site];
+      results.push(<p key={site} className="ReleaseSiteName">{site}</p>);
+      for (let deck of decks) {
+        let deckText = <a href={deck.url} target="_blank">{deck.deck_name} - {deck.currency}{deck.price}</a>
+        results.push(<p key={site+deck.deck_name} className="ReleaseDeckName">{deckText}</p>);
+      }
+    }
+
+    return results;
+  }
+
+  render() {
+    return super.render();
   }
 }
 
@@ -451,8 +565,8 @@ class SearchForm extends React.Component {
     return (
       <form onSubmit={(e) => this.props.onSubmit(e)}>
         <div className="FormContainer">
-        <p className="TagLine">Over <b>{formatNumber(this.props.deckCount - (this.props.deckCount % 1000))}</b> available decks indexed across <b>{this.props.siteCount}</b> shops</p>
-        <p className="TagLine"><img width="120px" src="https://ksr-static.imgix.net/tq0sfld-kickstarter-logo-green.png?ixlib=rb-2.1.0&s=0cce952d7b55823ff451a58887a0c578" alt="Kickstarter logo"></img> campaigns are now supported as well (Search for 'kickstarter')</p>
+          <p className="TagLine">Over <b>{formatNumber(this.props.deckCount - (this.props.deckCount % 1000))}</b> available decks indexed across <b>{this.props.siteCount}</b> shops</p>
+          <p className="TagLine"><img width="120px" src="https://ksr-static.imgix.net/tq0sfld-kickstarter-logo-green.png?ixlib=rb-2.1.0&s=0cce952d7b55823ff451a58887a0c578" alt="Kickstarter logo"></img> campaigns are now supported as well (Search for 'kickstarter')</p>
           <input
             className="SearchField"
             name="searchfield"
@@ -767,16 +881,16 @@ class AmazonProductBar extends React.Component {
 
   renderProductLinks() {
     if (this.state.displayedProducts.length == 0) {
-      if (this.state.productList.length > 0 ) {
+      if (this.state.productList.length > 0) {
         let links = this.state.productList.slice().filter((product) => {
           let result = false;
           switch (this.props.geoData.countryCode) {
             case "GB": {
-              result = product.country == 'UK'; 
+              result = product.country == 'UK';
               break;
             }
             default: {
-              result = product.country == 'US'; 
+              result = product.country == 'US';
               break;
             }
           }
@@ -784,16 +898,16 @@ class AmazonProductBar extends React.Component {
         });
         let itemWidth = 120, itemHeight = 240;
         let windowWidth = window.innerWidth;
-        let itemCount = Math.floor(windowWidth / itemWidth)-1;
+        let itemCount = Math.floor(windowWidth / itemWidth) - 1;
         let product_links = [];
-    
+
         for (let i = 0; i < Math.min(7, itemCount); i++) {
           let count = links.length;
-          let index = Math.floor(Math.random()*count);
+          let index = Math.floor(Math.random() * count);
           let item = links.splice(index, 1)[0];
           product_links.push(
             <iframe key={item.link}
-              style={{ width: itemWidth+"px", height: itemHeight + "px" }}
+              style={{ width: itemWidth + "px", height: itemHeight + "px" }}
               marginWidth="0"
               marginHeight="0"
               scrolling="no"
@@ -808,12 +922,12 @@ class AmazonProductBar extends React.Component {
         });
         return product_links;
       } else {
-        return <div></div>  
+        return <div></div>
       }
     } else {
       return this.state.displayedProducts;
     }
-  
+
   }
 
   render() {
