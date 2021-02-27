@@ -759,11 +759,12 @@ class ResultsArea extends React.Component {
         })
         .map((item) => {
           let siteName = this.siteFromURL(item.site);
+          let primaryItemClass = itemClass;
           if (!item.available) {
-            itemClass = "UnavailableItem";
-          }
+            primaryItemClass = "UnavailableItem";
+          } 
           return (
-            <div key={item.url+item.deck_name} className={itemClass}>
+            <div key={item.url+item.deck_name} className={primaryItemClass}>
               <a className="DeckLink" href={item.url} target="_blank" onClick={(e) => this.onLinkClick({ item })}>
                 <img className="Thumbnail" src={item.image_url} />
                 <p className="DeckName">{item.deck_name}</p>
