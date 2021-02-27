@@ -736,7 +736,7 @@ class ResultsArea extends React.Component {
 
   renderUnavailableIndicator(available) {
     if (!available) {
-      return <p className="UnavailableStatus">Unavailable</p>
+      return <p className="UnavailableStatus">Out of stock</p>
     }
     return 
   }
