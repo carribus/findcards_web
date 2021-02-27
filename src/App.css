@@ -46,7 +46,7 @@ ul > li {
 
 .HeaderBar {
   width: 100%;
-  padding: 10px 0px 10px 0px;
+  padding: 5px 0px 5px 0px;
   background-color: #363b44;
   display: flex;
   flex-direction: column;
@@ -101,7 +101,7 @@ ul > li {
   width: 100%;
   color:rgb(194, 195, 214);
   background-color: #4a515e;
-  padding: 10px 0px 10px 0px;
+  padding: 5px 0px 5px 0px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -167,7 +167,7 @@ ul > li {
 
 input[type="text"].SearchField {
   min-width: 300px;
-  height: 48px;
+  height: 36px;
   font-size: 18px;
   text-align: center;
   border: none;
@@ -183,28 +183,6 @@ input[type="text"].SearchField {
 .SearchField::placeholder {
   font-size: 16px;
   color: #FFFFFF;
-}
-
-.SearchButton {
-  height: 47px;
-  vertical-align: top;
-  margin-top: 2px;
-  margin-left: 2px;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius: 10px;
-  background-color: #c4c4c4;
-}
-
-.App-footer {
-  font-size: 14px;
-  color: #6c7588;
-  border-top: 2px #494e58 solid;
-  padding-top: 10px;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .Notice {
@@ -236,7 +214,7 @@ input[type="text"].SearchField {
 }
 
 .DropdownFilter {
-  height: 28px;
+  height: 24px;
   font-size: 13px;
   margin-top: 10px;
   margin-left: 5px;
@@ -252,7 +230,7 @@ input[type="text"].SearchField {
 
 
 .ResultsArea {
-  min-height: 63vh;
+  min-height: 67vh;
 }
 
 .Results {
@@ -264,7 +242,7 @@ input[type="text"].SearchField {
 }
 
 .ResultLabel {
-  margin-top: 50px;
+  margin-top: 30px;
   font-size: 18px;
   color: white;
 }
@@ -296,6 +274,29 @@ input[type="text"].SearchField {
 
 .ResultItem:hover {
   background-color: rgb(42, 42, 48);
+  transition: background-color 0.25s linear;
+}
+
+.UnavailableItem {
+  text-align: center;
+  width: 175px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin: 5px 5px 5px 5px;
+  border: rgb(51, 0, 0) solid 2px;
+  border-radius: 10px;
+  background-color: rgb(36, 0, 0);
+  clear: both;
+  transition: background-color 0.25s linear;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.UnavailableItem:hover {
+  background-color: rgb(42, 12, 12);
   transition: background-color 0.25s linear;
 }
 
@@ -356,6 +357,10 @@ input[type="text"].SearchField {
   font-size: 12px;
 }
 
+.UnavailableStatus {
+  color: red;
+}
+
 .Thumbnail {
   max-width: 95%;
   max-height: 100px;
@@ -375,9 +380,21 @@ input[type="text"].SearchField {
   font-style: italic;
 }
 
+.App-footer {
+  height: 70px;
+  width: 100%;
+  background-color:rgb(15, 15, 15);
+  font-size: 14px;
+  color: #6c7588;
+  border-top: 2px #494e58 solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .FooterLink, .FooterLink:visited, .NavFooterLinkLink:active {
   color: #6c7588;
-  margin-top: 10px;
+  /* margin-top: 5px; */
   text-decoration: underline;
 }
 

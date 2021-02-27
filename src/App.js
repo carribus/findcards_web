@@ -52,8 +52,6 @@ class App extends React.Component {
         region: null,
       },
       releaseDay: null,
-      releasedDecks: null,
-      releases_visible: false,
     }
   }
 
@@ -291,26 +289,18 @@ class App extends React.Component {
     fetch(url)
         .then(res => res.json())
         .then((data) => {
+          let decks = []
+          for (let site in data) {
+            decks = [...decks, ...data[site]];
+          }
           this.setState({
-            releasedDecks: data,
-            releaseDay: e,
-          }, () => {
-            this.onShowReleaseModal();
+            results: decks,
+            resultText: `${e}'s decks`,
           })
         })
         .catch((e) => {
           console.error(e);
         })
-  }
-
-  onShowReleaseModal(e) {
-    let releases_visible = this.state.releases_visible;
-    this.setState({
-      releases_visible: !releases_visible,
-    });
-    if (e) {
-      e.preventDefault();
-    }
   }
 
   render() {
@@ -320,13 +310,7 @@ class App extends React.Component {
         <SiteList
           sites={this.state.sites}
           visible={this.state.sites_visible}
-          onClose={(e) => this.onShowSiteList(e)} />
-        <ReleaseModal
-          releaseDay={this.state.releaseDay}
-          releasedDecks={this.state.releasedDecks}
-          visible={this.state.releases_visible}
-          onClick={(e) => this.onReleasesClick(e)}
-          onClose={(e) => this.onShowReleaseModal(e)}
+          onClose={(e) => this.onShowSiteList(e)}
         />
         <Header />
         <FeatureMenu onClick={(e) => this.onReleasesClick(e)}/>
@@ -465,38 +449,6 @@ class FeatureMenu extends React.Component {
   }
 }
 
-class ReleaseModal extends Modal {
-  constructor(props) {
-    super(props);
-  }
-
-  renderHeader() {
-    return (
-      <p>
-        These decks were added {this.props.releaseDay}
-      </p>
-    )
-  }
-
-  renderData() {
-    let results = [];
-    for (let site in this.props.releasedDecks) {
-      let decks = this.props.releasedDecks[site];
-      results.push(<p key={site} className="ReleaseSiteName">{site}</p>);
-      for (let deck of decks) {
-        let deckText = <a href={deck.url} target="_blank">{deck.deck_name} - {deck.currency}{deck.price}</a>
-        results.push(<p key={site+deck.deck_name} className="ReleaseDeckName">{deckText}</p>);
-      }
-    }
-
-    return results;
-  }
-
-  render() {
-    return super.render();
-  }
-}
-
 class SearchArea extends React.Component {
   constructor(props) {
     super(props);
@@ -561,6 +513,10 @@ class SearchForm extends React.Component {
     super(props);
   }
 
+  componentDidMount() {
+    this.searchField.focus();
+  }
+
   render() {
     return (
       <form onSubmit={(e) => this.props.onSubmit(e)}>
@@ -568,6 +524,7 @@ class SearchForm extends React.Component {
           <p className="TagLine">Over <b>{formatNumber(this.props.deckCount - (this.props.deckCount % 1000))}</b> available decks indexed across <b>{this.props.siteCount}</b> shops</p>
           <p className="TagLine"><img width="120px" src="https://ksr-static.imgix.net/tq0sfld-kickstarter-logo-green.png?ixlib=rb-2.1.0&s=0cce952d7b55823ff451a58887a0c578" alt="Kickstarter logo"></img> campaigns are now supported as well (Search for 'kickstarter')</p>
           <input
+            ref={(input) => {this.searchField = input; }}
             className="SearchField"
             name="searchfield"
             autoComplete="off"
@@ -777,6 +734,13 @@ class ResultsArea extends React.Component {
     }
   }
 
+  renderUnavailableIndicator(available) {
+    if (!available) {
+      return <p className="UnavailableStatus">Unavailable</p>
+    }
+    return 
+  }
+
   renderItems(items, itemClass = "ResultItem") {
     let results = null;
     if (items) {
@@ -795,13 +759,17 @@ class ResultsArea extends React.Component {
         })
         .map((item) => {
           let siteName = this.siteFromURL(item.site);
+          if (!item.available) {
+            itemClass = "UnavailableItem";
+          }
           return (
-            <div key={item.url} className={itemClass}>
+            <div key={item.url+item.deck_name} className={itemClass}>
               <a className="DeckLink" href={item.url} target="_blank" onClick={(e) => this.onLinkClick({ item })}>
                 <img className="Thumbnail" src={item.image_url} />
                 <p className="DeckName">{item.deck_name}</p>
                 <p className="DeckPrice">{item.currency == "Days" ? "Days left: " : item.currency} {item.price}</p>
                 <p className="SiteUrl">{siteName}</p>
+                {this.renderUnavailableIndicator(item.available)}
               </a>
             </div>
           )
@@ -947,6 +915,46 @@ class AmazonProductBar extends React.Component {
   }
 }
 
+class Modal2 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      yOffset: window.pageYOffset,
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', (e) => {
+      this.setState({
+        yOffset: window.pageYOffset,
+      })
+    })
+  }
+
+  render(className = "Modal") {
+    let width = window.innerWidth * 0.6;
+    let height = window.innerHeight * 0.6;
+    let top = window.innerHeight / 2 - height / 2 + this.state.yOffset;
+    let left = 50 + '%';
+    let marginLeft = -width / 2;
+    let display = this.props.visible ? "block" : "none";
+    
+    return (
+      <div className={className} style={{ display, width, height, top, left, marginLeft, position: 'absolute' }}>
+        <div>
+          <button onClick={(e) => this.props.onClose(e)} className="CloseButton">X</button>
+        </div>
+          <b>
+            {this.renderHeader()}
+          </b>
+        <div className="ScrollablePanel" >
+          {this.renderData()}
+        </div>
+      </div>
+    )
+  }
+}
+
 class Footer extends React.Component {
   constructor(props) {
     super(props);
@@ -955,7 +963,7 @@ class Footer extends React.Component {
   render() {
     return (
       <footer className="App-footer">
-        <div style={{ "marginTop": "10px" }}>
+        <div>
           <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> | <a className="FooterLink" href="" onClick={(e) => this.props.onShowSiteList(e)}>Supported Sites</a><br />
           {this.props.serverVersion ? `v${this.props.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo designed by <a className="FooterLink" href="https://www.behance.net/melvinmercier">Melvin Mercier</a>
         </div>
