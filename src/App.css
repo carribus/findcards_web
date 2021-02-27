@@ -392,6 +392,11 @@ input[type="text"].SearchField {
   justify-content: center;
 }
 
+.InstaIcon {
+  width: 42px;
+  height: auto;
+}
+
 .FooterLink, .FooterLink:visited, .NavFooterLinkLink:active {
   color: #6c7588;
   /* margin-top: 5px; */

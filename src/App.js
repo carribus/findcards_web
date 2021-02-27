@@ -1,15 +1,16 @@
 import logo from './fc-logo-256x256.png';
 import patreonlogo from "./PatreonWebsiteBadge.jpg";
+import instaicon from "./instaicon.png";
 import './App.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import userEvent from '@testing-library/user-event';
 
-const HOST = "find-cards.com/api";
-const PROTOCOL = "https";
+// const HOST = "find-cards.com/api";
+// const PROTOCOL = "https";
 
-// const HOST = "localhost:8000";
-// const PROTOCOL = "http";
+const HOST = "localhost:8000";
+const PROTOCOL = "http";
 
 // API Endpoints
 const API_SEARCH = `${PROTOCOL}://${HOST}/search?key=`;
@@ -422,7 +423,7 @@ class Header extends React.Component {
       <div className="HeaderBar">
         <div className="HeaderBrand">
           <a href="/">
-            <img className="Logo" src={logo} alt="find-cards logo" />
+            <img className="Logo" src={logo} title="find-cards.com" alt="find-cards logo" />
           </a>
           <a href="/" className="LogoText">find-cards.com</a>
         </div>
@@ -815,7 +816,10 @@ class ResultsArea extends React.Component {
           {items}
         </div>
         {/* <AmazonProductBar geoData={this.props.geoData}/> */}
-        <a href="https://www.patreon.com/bePatron?u=51104947"><img className="PatreonBadge" src={patreonlogo} alt="Become a patron!"></img></a>
+
+        <br/>
+        <a href="https://www.patreon.com/bePatron?u=51104947" target="_blank"><img className="PatreonBadge" src={patreonlogo} alt="Become a patron!"></img></a>
+
         {labelSuggestions}
         <div className="Results">
           {suggested_items}
@@ -964,6 +968,9 @@ class Footer extends React.Component {
   render() {
     return (
       <footer className="App-footer">
+        <a href="https://www.instagram.com/findcardsdotcom/" title="Instagram" target="_blank">
+          <img className="InstaIcon" src={instaicon} />
+        </a>
         <div>
           <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> | <a className="FooterLink" href="" onClick={(e) => this.props.onShowSiteList(e)}>Supported Sites</a><br />
           {this.props.serverVersion ? `v${this.props.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo designed by <a className="FooterLink" href="https://www.behance.net/melvinmercier">Melvin Mercier</a>
