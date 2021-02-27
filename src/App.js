@@ -442,8 +442,8 @@ class FeatureMenu extends React.Component {
   render() {
     return (
       <nav className="FeatureMenu">
-        <div className="FeatureItem" title="Can change over the course of the day" onClick={() => this.props.onClick("today")}>Today's decks</div>
-        <div className="FeatureItem" onClick={() => this.props.onClick("yesterday")}>Yesterday's decks</div>
+        <div className="FeatureItem" title="Can change over the course of the day" onClick={() => this.props.onClick("today")}>Decks added today</div>
+        <div className="FeatureItem" onClick={() => this.props.onClick("yesterday")}>Decks added yesterday</div>
       </nav>
     )
   }
