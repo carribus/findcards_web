@@ -443,7 +443,7 @@ class FeatureMenu extends React.Component {
     return (
       <nav className="FeatureMenu">
         <div className="FeatureItem" title="Can change over the course of the day" onClick={() => this.props.onClick("today")}>Today's decks</div>
-        <div className="FeatureItem" onClick={() => this.props.onClick("yesterday")}>Yesteday's decks</div>
+        <div className="FeatureItem" onClick={() => this.props.onClick("yesterday")}>Yesterday's decks</div>
       </nav>
     )
   }
