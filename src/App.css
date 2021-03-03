@@ -143,7 +143,6 @@ ul > li {
 
 .CurrencyButton, .CurrencyButton:focus {
   height: 25px;
-  margin-top: 15px;
   margin-right: 5px;
   border-radius: 5px;
   background-color: lightgray;
@@ -155,7 +154,6 @@ ul > li {
   color: white;
   border: 2px greenyellow solid;
   height: 25px;
-  margin-top: 15px;
   margin-right: 5px;
   outline: none;
   border-radius: 5px;
@@ -174,6 +172,7 @@ input[type="text"].SearchField {
   border-radius: 10px;
   background-color: #434953;
   color: white;
+  margin-bottom: 10px;
 }
 
 .SearchField:focus {

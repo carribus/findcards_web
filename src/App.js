@@ -6,17 +6,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import userEvent from '@testing-library/user-event';
 
-const HOST = "find-cards.com/api";
-const PROTOCOL = "https";
+// const HOST = "find-cards.com/api";
+// const PROTOCOL = "https";
 
-// const HOST = "localhost:8000";
-// const PROTOCOL = "http";
+const HOST = "localhost:8000";
+const PROTOCOL = "http";
 
 // API Endpoints
 const API_SEARCH = `${PROTOCOL}://${HOST}/search?key=`;
 const API_POPULAR_SEARCHES = `${PROTOCOL}://${HOST}/search/popular?limit=`;
 const API_RECENT_SEARCHES = `${PROTOCOL}://${HOST}/search/recent?limit=`;
 const API_STATS = `${PROTOCOL}://${HOST}/stats`;
+const API_COUNTERS = `${PROTOCOL}://${HOST}/counters`;
 const API_EVENT_POST = `${PROTOCOL}://${HOST}/data/event`
 const API_AFFILIATE_PRODUCTS = `${PROTOCOL}://${HOST}/aff/products`;
 const API_RELEASES_ON_DAY = `${PROTOCOL}://${HOST}/releases`;
@@ -53,6 +54,11 @@ class App extends React.Component {
         region: null,
       },
       releaseDay: null,
+      counters: {
+        search_count: 0,
+        today_count: 0,
+        yesterday_count: 0,
+      }
     }
   }
 
@@ -81,6 +87,9 @@ class App extends React.Component {
           serverVersion: data.version,
           siteCount: data.sites.length,
           deckCount: data.deck_count,
+          counters: {
+            search_count: data.search_count,
+          },
           sites: data.sites.map((site) => {
             return {
               label: site.label,
@@ -93,6 +102,8 @@ class App extends React.Component {
           }),
           regions: get_unique_regions(data.sites),
           selectedRegion: 'All',
+        }, () => {
+          this.fetchCounters()
         })
       })
       .catch((e) => {
@@ -147,6 +158,25 @@ class App extends React.Component {
         this.submitSearch();
       })
     }
+  }
+
+  fetchCounters() {
+    fetch(API_COUNTERS)
+      .then(res => res.json())
+      .then((data) => {
+        this.setState({
+          counters: {
+            search_count: data.search_count,
+            today_count: data.today_count,
+            yesterday_count: data.yesterday_count,
+          }
+        }, () => {
+          setTimeout(() => {
+            this.fetchCounters();
+          }, 10000)
+
+        });
+      })
   }
 
   handleTargetCurrencyChange(curr) {
@@ -314,12 +344,16 @@ class App extends React.Component {
           onClose={(e) => this.onShowSiteList(e)}
         />
         <Header />
-        <FeatureMenu onClick={(e) => this.onReleasesClick(e)}/>
+        <FeatureMenu 
+          counters={this.state.counters}
+          onClick={(e) => this.onReleasesClick(e)}
+        />
         <SearchArea
           deckCount={this.state.deckCount}
           siteCount={this.state.siteCount}
           searchText={this.state.searchText}
           targetCurrency={this.state.targetCurrency}
+          counters={this.state.counters}
           onTargetCurrencyChange={(e) => this.handleTargetCurrencyChange(e)}
           onChange={(e) => this.handleSearchChange(e)}
           onSubmit={(e) => this.handleSearchSubmit(e)} />
@@ -443,8 +477,8 @@ class FeatureMenu extends React.Component {
   render() {
     return (
       <nav className="FeatureMenu">
-        <div className="FeatureItem" title="Can change over the course of the day" onClick={() => this.props.onClick("today")}>Decks added today</div>
-        <div className="FeatureItem" onClick={() => this.props.onClick("yesterday")}>Decks added yesterday</div>
+        <div className="FeatureItem" title={`Can change over the course of the day\n(${this.props.counters.today_count} searches requested)`} onClick={() => this.props.onClick("today")}>Decks added today</div>
+        <div className="FeatureItem" title={`(${this.props.counters.yesterday_count} searches requested)`} onClick={() => this.props.onClick("yesterday")}>Decks added yesterday</div>
       </nav>
     )
   }
@@ -462,6 +496,7 @@ class SearchArea extends React.Component {
           searchText={this.props.searchText}
           deckCount={this.props.deckCount}
           siteCount={this.props.siteCount}
+          counters={this.props.counters}
           onSubmit={(e) => this.props.onSubmit(e)}
           onChange={(e) => this.props.onChange(e)}
         />
@@ -523,6 +558,7 @@ class SearchForm extends React.Component {
       <form onSubmit={(e) => this.props.onSubmit(e)}>
         <div className="FormContainer">
           <p className="TagLine">Over <b>{formatNumber(this.props.deckCount - (this.props.deckCount % 1000))}</b> available decks indexed across <b>{this.props.siteCount}</b> shops</p>
+          <p className="TagLine"></p>
           <p className="TagLine"><img width="120px" src="https://ksr-static.imgix.net/tq0sfld-kickstarter-logo-green.png?ixlib=rb-2.1.0&s=0cce952d7b55823ff451a58887a0c578" alt="Kickstarter logo"></img> campaigns are now supported as well (Search for 'kickstarter')</p>
           <input
             ref={(input) => {this.searchField = input; }}
@@ -534,6 +570,7 @@ class SearchForm extends React.Component {
             placeholder="Enter name of a deck here"
             value={this.props.searchText ? this.props.searchText : ""}
           />
+          <p className="TagLine"><b>{formatNumber(this.props.counters.search_count)}</b> searches run so far</p>
         </div>
       </form>
     )
