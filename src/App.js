@@ -21,6 +21,7 @@ const API_COUNTERS = `${PROTOCOL}://${HOST}/counters`;
 const API_EVENT_POST = `${PROTOCOL}://${HOST}/data/event`
 const API_AFFILIATE_PRODUCTS = `${PROTOCOL}://${HOST}/aff/products`;
 const API_RELEASES_ON_DAY = `${PROTOCOL}://${HOST}/releases`;
+const API_PATRON_LIST = `${PROTOCOL}://${HOST}/patrons`;
 
 // CURRENCY API
 const API_EXCHANGE_RATES = "https://api.exchangeratesapi.io";
@@ -58,7 +59,9 @@ class App extends React.Component {
         search_count: 0,
         today_count: 0,
         yesterday_count: 0,
-      }
+      },
+      patrons: [],
+      patrons_visible: false,
     }
   }
 
@@ -146,6 +149,15 @@ class App extends React.Component {
           }
         })
       })
+
+    fetch(API_PATRON_LIST)
+      .then(res => res.json())
+      .then((data) => {
+        console.log(data);
+        this.setState({
+          patrons: data
+        });
+      });
 
     // fetch any query parameters that should be sent through for search
     // and do the search
@@ -302,6 +314,15 @@ class App extends React.Component {
     e.preventDefault();
   }
 
+  onShowPatronList(e) {
+    console.log("show patron list");
+    let patrons_visible = this.state.patrons_visible;
+    this.setState({
+      patrons_visible: !patrons_visible,
+    })
+    e.preventDefault();
+  }
+
   onReleasesClick(e) {
     const MS_PER_DAY = 86400000;
     this.setState({
@@ -343,6 +364,11 @@ class App extends React.Component {
           visible={this.state.sites_visible}
           onClose={(e) => this.onShowSiteList(e)}
         />
+        <PatronList 
+          patrons={this.state.patrons}
+          visible={this.state.patrons_visible}
+          onClose={(e) => this.onShowPatronList(e)}
+        />
         <Header />
         <FeatureMenu 
           counters={this.state.counters}
@@ -374,6 +400,7 @@ class App extends React.Component {
         <Footer
           serverVersion={this.state.serverVersion}
           onShowSiteList={(e) => this.onShowSiteList(e)}
+          onShowPatronList={(e) => this.onShowPatronList(e)}
         />
       </div>
     );
@@ -438,6 +465,33 @@ class SiteList extends Modal {
     return this.props.sites.map((site) => {
       return (
         <li key={site.label}><a href={site.url}>{site.label}</a></li>
+      )
+    })
+  }
+
+  render() {
+    return super.render();
+  }
+}
+
+class PatronList extends Modal {
+  constructor(props) {
+    super(props);
+  }
+
+  renderHeader() {
+    return (
+      <p>
+        A huge thanks to our wonderful patrons!<br/>
+        If you would like to become a patron, <a href="https://www.patreon.com/bePatron?u=51104947" target="_blank">support us on Patreon</a>
+      </p>
+    )
+  }
+
+  renderData() {
+    return this.props.patrons.map((patron) => {
+      return (
+        <li key={patron.name}>{patron.name} (<strong>{patron.patron_type_label}</strong>)</li>
       )
     })
   }
@@ -1009,7 +1063,7 @@ class Footer extends React.Component {
           <img className="InstaIcon" src={instaicon} />
         </a>
         <div>
-          <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> | <a className="FooterLink" href="" onClick={(e) => this.props.onShowSiteList(e)}>Supported Sites</a><br />
+          <a className="FooterLink" href="mailto:peter@find-cards.com">Contact Us</a> | <a className="FooterLink" href="" onClick={(e) => this.props.onShowSiteList(e)}>Supported Sites</a> | <a className="FooterLink" href="" onClick={(e) => this.props.onShowPatronList(e)}>Patrons</a><br />
           {this.props.serverVersion ? `v${this.props.serverVersion}` : '-'} | Copyright {new Date().getFullYear()}, SciEnt | Logo designed by <a className="FooterLink" href="https://www.behance.net/melvinmercier">Melvin Mercier</a>
         </div>
       </footer>
