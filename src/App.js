@@ -57,8 +57,6 @@ class App extends React.Component {
       releaseDay: null,
       counters: {
         search_count: 0,
-        today_count: 0,
-        yesterday_count: 0,
       },
       patrons: [],
       patrons_visible: false,
@@ -179,8 +177,6 @@ class App extends React.Component {
         this.setState({
           counters: {
             search_count: data.search_count,
-            today_count: data.today_count,
-            yesterday_count: data.yesterday_count,
           }
         }, () => {
           setTimeout(() => {
@@ -531,8 +527,8 @@ class FeatureMenu extends React.Component {
   render() {
     return (
       <nav className="FeatureMenu">
-        <div className="FeatureItem" title={`Can change over the course of the day\n(${this.props.counters.today_count} searches requested)`} onClick={() => this.props.onClick("today")}>Decks added today</div>
-        <div className="FeatureItem" title={`(${this.props.counters.yesterday_count} searches requested)`} onClick={() => this.props.onClick("yesterday")}>Decks added yesterday</div>
+        <div className="FeatureItem" title={`Can change over the course of the day`} onClick={() => this.props.onClick("today")}>Decks added today</div>
+        <div className="FeatureItem" title={`All the decks released yesterday`} onClick={() => this.props.onClick("yesterday")}>Decks added yesterday</div>
       </nav>
     )
   }
