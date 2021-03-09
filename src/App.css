@@ -299,6 +299,10 @@ input[type="text"].SearchField {
   transition: background-color 0.25s linear;
 }
 
+.SupporterLink {
+  color: white;
+}
+
 .PatreonBadge {
   width: 150px;
   height: auto;

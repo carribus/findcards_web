@@ -392,6 +392,7 @@ class App extends React.Component {
           targetCurrency={this.state.targetCurrency}
           exchangeRates={this.state.exchangeRates}
           results={this.state.results}
+          onShowPatronList={(e) => this.onShowPatronList(e)}
         />
         <Footer
           serverVersion={this.state.serverVersion}
@@ -904,6 +905,8 @@ class ResultsArea extends React.Component {
         </div>
         {/* <AmazonProductBar geoData={this.props.geoData}/> */}
 
+        <a className="SupporterLink" href="" onClick={(e) => this.props.onShowPatronList(e)}>Our patrons (supporters)</a>
+        <br/>
         <br/>
         <a href="https://www.patreon.com/bePatron?u=51104947" target="_blank"><img className="PatreonBadge" src={patreonlogo} alt="Become a patron!"></img></a>
 
