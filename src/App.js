@@ -352,12 +352,15 @@ class App extends React.Component {
   }
 
   onPopularDecksClick(e) {
-    console.log('popular decks');
     fetch(API_SEARCH_POPULAR_DECKS)
       .then(res => res.json())
       .then((data) => {
+        let decks = data.filter((d) => {
+          return d.currency != 'Days' &&
+                 d.price != 0.0
+        })
         this.setState({
-          results: data,
+          results: decks,
           resultText: `Most popular decks`,
         })      })
       .catch((e) => {
@@ -545,7 +548,7 @@ class FeatureMenu extends React.Component {
       <nav className="FeatureMenu">
         <div className="FeatureItem" title={`Can change over the course of the day`} onClick={() => this.props.onReleasesClick("today")}>Decks added today</div>
         <div className="FeatureItem" title={`All the decks released yesterday`} onClick={() => this.props.onReleasesClick("yesterday")}>Decks added yesterday</div>
-        <div className="FeatureItem" title={`Most popular products`} onClick={() => this.props.onPopularDecksClick("popular_products")}>Popular Decks</div>
+        <div className="FeatureItem" title={`Most popular products`} onClick={() => this.props.onPopularDecksClick("popular_products")}>Most Popular Decks</div>
       </nav>
     )
   }
