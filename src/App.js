@@ -22,6 +22,7 @@ const API_EVENT_POST = `${PROTOCOL}://${HOST}/data/event`
 const API_AFFILIATE_PRODUCTS = `${PROTOCOL}://${HOST}/aff/products`;
 const API_RELEASES_ON_DAY = `${PROTOCOL}://${HOST}/releases`;
 const API_PATRON_LIST = `${PROTOCOL}://${HOST}/patrons`;
+const API_SEARCH_POPULAR_DECKS = `${PROTOCOL}://${HOST}/popularproducts`;
 
 // CURRENCY API
 const API_EXCHANGE_RATES = "https://api.exchangeratesapi.io";
@@ -151,7 +152,6 @@ class App extends React.Component {
     fetch(API_PATRON_LIST)
       .then(res => res.json())
       .then((data) => {
-        console.log(data);
         this.setState({
           patrons: data
         });
@@ -351,6 +351,20 @@ class App extends React.Component {
         })
   }
 
+  onPopularDecksClick(e) {
+    console.log('popular decks');
+    fetch(API_SEARCH_POPULAR_DECKS)
+      .then(res => res.json())
+      .then((data) => {
+        this.setState({
+          results: data,
+          resultText: `Most popular decks`,
+        })      })
+      .catch((e) => {
+        console.error(e);
+      })
+  }
+
   render() {
     return (
       <div className="App">
@@ -368,7 +382,8 @@ class App extends React.Component {
         <Header />
         <FeatureMenu 
           counters={this.state.counters}
-          onClick={(e) => this.onReleasesClick(e)}
+          onReleasesClick={(e) => this.onReleasesClick(e)}
+          onPopularDecksClick={(e) => this.onPopularDecksClick(e)}
         />
         <SearchArea
           deckCount={this.state.deckCount}
@@ -528,8 +543,9 @@ class FeatureMenu extends React.Component {
   render() {
     return (
       <nav className="FeatureMenu">
-        <div className="FeatureItem" title={`Can change over the course of the day`} onClick={() => this.props.onClick("today")}>Decks added today</div>
-        <div className="FeatureItem" title={`All the decks released yesterday`} onClick={() => this.props.onClick("yesterday")}>Decks added yesterday</div>
+        <div className="FeatureItem" title={`Can change over the course of the day`} onClick={() => this.props.onReleasesClick("today")}>Decks added today</div>
+        <div className="FeatureItem" title={`All the decks released yesterday`} onClick={() => this.props.onReleasesClick("yesterday")}>Decks added yesterday</div>
+        <div className="FeatureItem" title={`Most popular products`} onClick={() => this.props.onPopularDecksClick("popular_products")}>Popular Decks</div>
       </nav>
     )
   }
