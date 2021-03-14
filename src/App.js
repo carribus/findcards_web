@@ -277,7 +277,11 @@ class App extends React.Component {
       .then((data) => {
         data.map((d) => {
           d.price = d.price.replace(",", ".");
-          d.base_price = parseFloat(d.price) * 1/this.state.exchangeRates['USD'][currencySymbolToCode(d.currency)];
+          if (d.currency != 'Days') {
+            d.base_price = parseFloat(d.price) * 1/this.state.exchangeRates['USD'][currencySymbolToCode(d.currency)];
+          } else {
+            d.base_price = parseFloat(d.price);
+          }
         }).sort((a, b) => {
           let ap = parseFloat(a.base_price);
           let bp = parseFloat(b.base_price);
