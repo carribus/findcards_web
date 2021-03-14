@@ -226,7 +226,6 @@ class App extends React.Component {
 
   fetchCurrencyPairs(baseCurrency) {
     baseCurrency = baseCurrency ? baseCurrency : 'USD';
-    console.log("Fetch exchange rates for " + baseCurrency);
     let today = new Date();
     let url = `${API_EXCHANGE_RATES}/${today.getFullYear()}-${today.getUTCMonth() + 1}-${today.getUTCDate()}?base=${baseCurrency}`
 
