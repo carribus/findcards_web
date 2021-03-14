@@ -34,6 +34,27 @@ function formatNumber(num) {
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
 
+function currencySymbolToCode(symbol) {
+  switch (symbol) {
+    case "$": return 'USD';
+    case "€": return 'EUR';
+    case "£": return 'GBP';
+    case "A$": return 'AUD';
+    case "S$": return 'SGD';
+    default: return symbol;
+  }
+}
+
+function currencyCodeToSymbol(code) {
+  switch (code) {
+    case "USD": return '$';
+    case "EUR": return '€';
+    case "GBP": return '£';
+    case "AUD": return 'A$';
+    default: return code;
+  }
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -144,6 +165,7 @@ class App extends React.Component {
           targetCurrency,
         }, () => {
           if (this.state.targetCurrency) {
+            this.fetchCurrencyPairs('USD');
             this.fetchCurrencyPairs(this.state.targetCurrency);
           }
         })
@@ -203,16 +225,18 @@ class App extends React.Component {
   }
 
   fetchCurrencyPairs(baseCurrency) {
+    baseCurrency = baseCurrency ? baseCurrency : 'USD';
+    console.log("Fetch exchange rates for " + baseCurrency);
     let today = new Date();
     let url = `${API_EXCHANGE_RATES}/${today.getFullYear()}-${today.getUTCMonth() + 1}-${today.getUTCDate()}?base=${baseCurrency}`
 
     // make sure that we don't refetch exchange rates that we already have
     if (!this.state.exchangeRates[baseCurrency]) {
-      let er = { ...this.state.exchangeRates };
-
       fetch(url)
         .then(res => res.json())
         .then((data) => {
+          let er = { ...this.state.exchangeRates };
+
           er[baseCurrency] = data.rates;
           this.setState({
             exchangeRates: er,
@@ -251,9 +275,12 @@ class App extends React.Component {
     fetch(`${API_SEARCH}${this.state.searchText}`)
       .then(res => res.json())
       .then((data) => {
-        data.sort((a, b) => {
-          let ap = parseFloat(a.price);
-          let bp = parseFloat(b.price);
+        data.map((d) => {
+          d.price = d.price.replace(",", ".");
+          d.base_price = parseFloat(d.price) * 1/this.state.exchangeRates['USD'][currencySymbolToCode(d.currency)];
+        }).sort((a, b) => {
+          let ap = parseFloat(a.base_price);
+          let bp = parseFloat(b.base_price);
 
           // sort by relevance first
           if (a.relevance > b.relevance) return -1;
@@ -272,7 +299,6 @@ class App extends React.Component {
         this.setState({
           resultText: this.state.searchText,
           results: data.map(deck => {
-            deck.price = deck.price.replace(",", ".");
             return deck;
           })
             .filter(deck => deck.available === true)
@@ -810,31 +836,10 @@ class ResultsArea extends React.Component {
     })
   }
 
-  currencySymbolToCode(symbol) {
-    switch (symbol) {
-      case "$": return 'USD';
-      case "€": return 'EUR';
-      case "£": return 'GBP';
-      case "A$": return 'AUD';
-      case "S$": return 'SGD';
-      default: return symbol;
-    }
-  }
-
-  currencyCodeToSymbol(code) {
-    switch (code) {
-      case "USD": return '$';
-      case "EUR": return '€';
-      case "GBP": return '£';
-      case "AUD": return 'A$';
-      default: return code;
-    }
-  }
-
   convertToTargetCurrency(item) {
     let rates = this.props.exchangeRates[this.props.targetCurrency];
     if (rates) {
-      let itemCurrency = this.currencySymbolToCode(item.currency);
+      let itemCurrency = currencySymbolToCode(item.currency);
 
       rates[this.props.targetCurrency] = 1;
 
@@ -858,12 +863,12 @@ class ResultsArea extends React.Component {
           let new_item = { ...item };
           if (new_item.site != 'https://www.kickstarter.com' && this.props.targetCurrency) {
             new_item.price = this.convertToTargetCurrency(item);
-            new_item.currency = this.currencyCodeToSymbol(this.props.targetCurrency);
+            new_item.currency = currencyCodeToSymbol(this.props.targetCurrency);
           }
           return new_item;
         })
         .sort((a, b) => {
-          return a.price - b.price
+          return a.base_price - b.base_price
         })
         .map((item) => {
           let siteName = this.siteFromURL(item.site);
