@@ -1085,7 +1085,7 @@ class Footer extends React.Component {
   render() {
     return (
       <footer className="App-footer">
-        <a href="https://www.instagram.com/findcardsdotcom/" title="Instagram" target="_blank">
+        <a href="https://www.instagram.com/find_cards_com/" title="Instagram" target="_blank">
           <img className="InstaIcon" src={instaicon} />
         </a>
         <div>
