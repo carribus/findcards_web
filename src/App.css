@@ -1,5 +1,6 @@
 body {
   background-color: #292c31;
+  min-width: 320px;
 }
 
 .Hidden {
@@ -108,7 +109,7 @@ ul > li {
 }
 
 .FeatureItem {
-  padding: 0px 15px 0px 15px;
+  padding: 0px 10px 0px 10px;
   border-left: 1px solid black;
   border-right: 1px solid black;
 }
@@ -123,7 +124,6 @@ ul > li {
   font-weight: bold;
   text-decoration: underline;
   font-size: 16px;
-  /* text-align: left; */
   margin: 20px 0px 15px 0px;  
 }
 
@@ -426,6 +426,10 @@ input[type="text"].SearchField {
     width: 220px;
   }
 
+  .FeatureMenu {
+    font-size: 14px;
+  }
+
   .SiteList {
     font-size: 12px;
   }
@@ -439,7 +443,11 @@ input[type="text"].SearchField {
   .Blurb {
     font-size: 15px;
   }
-  
+
+  .FeatureMenu {
+    font-size: 13px;
+  }
+
   .SiteList {
     font-size: 12px;
   }
